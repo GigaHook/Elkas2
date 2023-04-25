@@ -1,6 +1,3 @@
-
-
-
 <template>
 	<Head title="Home" />
 	<MainLayout :user="user">
