@@ -6,15 +6,30 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
+import VueTheMask from 'vue-the-mask'
 
+//vuetify
 
 import { createVuetify } from 'vuetify'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 
+const icons = {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
+    }
+}
+
+const vuetify = createVuetify({ components, directives, icons});
+
+//other stuff
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
-const vuetify = createVuetify({ components, directives });
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -24,6 +39,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(vuetify)
+            .use(VueTheMask)
             .mount(el);
     },
     progress: {

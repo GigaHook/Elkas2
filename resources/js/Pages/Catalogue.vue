@@ -1,7 +1,6 @@
 <template>
 	<Head title="Home" />
-	<MainLayout :user="user">
-		
+	<MainLayout :user="user" >
 		<h1>Каталог</h1>
 		{{ user?.name }}
 		<Link href="/dashboard"><v-btn>Дэшборд</v-btn></Link>
