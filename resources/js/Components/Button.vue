@@ -14,7 +14,6 @@ defineProps({
   .btn-var-1{
     background-color:#3f72af;
     color: white;
-    border-radius: 10px;
   }
   .btn-var-1:hover{
     background-color:#112D4E;

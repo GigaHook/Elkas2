@@ -8,36 +8,44 @@
         <Link class="nav-item"><v-btn class="rounded-0 nav-item">Услуги</v-btn></Link>
         <Link class="nav-item"><v-btn class="rounded-0 nav-item">О нас</v-btn></Link>
         <Link class="nav-item me-auto"><v-btn class="rounded-0 nav-item">Контакты</v-btn></Link>
-        <Link class="nav-item cart-btn"><v-btn class="rounded-0 nav-item">крзн</v-btn></Link>
+        <Link class="nav-item cart-btn"><v-btn class="rounded-0 nav-item cart-btn"><v-icon icon="mdi-cart-outline" size="30"/></v-btn></Link>
       </v-app-bar>
     </v-container>
 
-    <v-row class="justify-center mt-3">
+    <v-row class="justify-center mt-3 mx-md-1 mx-lg-0">
       <!--content-->
-      <v-col xl="7" lg="8" md="8" sm="12">
-        <v-card class="block py-1 px-3" elevation="3">
+      <v-col xl="7" lg="8" md="9" sm="12">
+        <v-card color="#f9f7f7" elevation="3">
           <slot/>          
         </v-card>
       </v-col>
       
       <!--side-->
-      <v-col xl="2" lg="3" md="4" sm="12">
+      <v-col xl="2" lg="3" md="3" sm="12">
         <!--auth-->
-        <v-card v-if="!!user" class="block py-1 px-3" elevation="3">
-          {{ user.name }} <br>
-          <Link :href="route('logout')" method="post" as="button" preserve-state preserve-scroll><Button>Выйти</Button></Link>
+        <v-card v-if="!!user" class="pa-3" color="#f9f7f7" elevation="3">
+          <span>Статус: <b>Авторизованный пользователь</b></span>
+          <div class="d-flex flex-column">
+            <v-icon icon="mdi-account-check-outline" size="120" class="align-self-center"/>
+            <div class="text-h6 align-self-center mb-2">
+              {{ user.name }}
+            </div>
+            Товаров в корзине: TODO <br>
+            <Link class="align-self-center"><v-btn variant="tonal" append-icon="mdi-arrow-right" style="color:black" v-ripple="{ class: `text-info` }">В корзину</v-btn></Link>
+            <Link :href="route('logout')" method="post" as="button" class="mt-2" preserve-state preserve-scroll><Button>Выйти</Button></Link>
+          </div>
         </v-card>
         <!--guest-->
         <v-slide-x-transition v-else hide-on-leave>
           <!--login-->
-          <v-card v-if="loginVariant" class="block pa-3" elevation="3">
+          <v-card v-if="loginVariant" class="pa-2" color="#f9f7f7" elevation="3">
             <span>Статус: <b>Гость</b></span>
             <v-form @submit.prevent="loginSubmit" v-model="isLoginValid" validate-on="blur" class="text-center">
               <v-icon icon="mdi-account-remove-outline" style="transform: scaleX(-1);" size="120"/> <!--mirror magic-->
               <div class="text-h6 mb-3">Войдите в аккаунт</div>
               <v-text-field
                 type="email"
-                v-model="email"
+                v-model="loginEmail"
                 :rules="[rules.required, rules.email]"
                 label="E-mail"
                 placeholder="example@gmail.com"
@@ -48,7 +56,7 @@
               />
               <v-text-field
                 type="password"
-                v-model="password"
+                v-model="loginPassword"
                 :rules="[rules.required, rules.range]"
                 label="Пароль"
                 hint="Минимум 8 символов"
@@ -61,7 +69,7 @@
               <Button type="submit" class="mb-3">Войти</Button> <br>
               Нет аккаунта? <br>
               <v-btn 
-                variant="tonal" 
+                variant="text" 
                 @click="loginVariant = !loginVariant" 
                 append-icon="mdi-arrow-right" 
                 v-ripple="{ class: `text-info` }"
@@ -72,12 +80,12 @@
             </v-form>
           </v-card>
           <!--register-->
-          <v-card v-else class="block pa-3" elevation="3">
+          <v-card v-else class="pa-3" color="#f9f7f7" elevation="3">
             <v-form @submit.prevent="registerSubmit" v-model="isRegisterValid" validate-on="blur" class="text-center">
               <div class="text-h6 mb-3">Регистрация</div>
               <v-text-field
                 type="text"
-                v-model="name"
+                v-model="registerName"
                 :rules="[rules.required, rules.range]"
                 maxlength="20"
                 label="Логин"
@@ -89,7 +97,7 @@
               />
               <v-text-field
                 type="email"
-                v-model="email"
+                v-model="registerEmail"
                 :rules="[rules.required, rules.email]"
                 label="E-mail"
                 placeholder="example@gmail.com"
@@ -100,7 +108,7 @@
               />
               <v-text-field
                 type="tel"
-                v-model="number"
+                v-model="registerNumber"
                 :rules="[rules.required]"
                 v-mask="[' (###) ###-##-##']"
                 label="Телефон"
@@ -112,7 +120,7 @@
               />
               <v-text-field
                 type="password"
-                v-model="password"
+                v-model="registerPassword"
                 :rules="[rules.required, rules.range]"
                 maxlength="20"
                 label="Пароль"
@@ -135,7 +143,7 @@
               <Button type="submit" class="mb-3">Зарегистрироваться</Button> <br>
               Есть аккаунт? <br>
               <v-btn 
-                variant="tonal" 
+                variant="text" 
                 @click="loginVariant = !loginVariant" 
                 append-icon="mdi-arrow-right" 
                 v-ripple="{ class: `text-info` }"
@@ -157,10 +165,12 @@
 export default {
 
   data: () => ({
-    email: '',
-    password: '',
-    name: '',
-    number: '',
+    loginEmail: '',
+    loginPassword: '',
+    registerEmail: '',
+    registerPassword: '',
+    registerName: '',
+    registerNumber: '',
     repeat: '',
     rules: {
       required: value => !!value || "Это обязательное поле",
@@ -179,17 +189,19 @@ export default {
     },
 
     clearForms() {
-      this.email = ''
-      this.password = ''
-      this.name = ''
-      this.number = ''
+      this.loginEmail = ''
+      this.loginPassword = ''
+      this.registerEmail = ''
+      this.registerPassword = ''
+      this.registerName = ''
+      this.registerNumber = ''
     },
 
     loginSubmit() {
       if (this.isLoginValid) {
         router.post(route('login'), {
-          email: this.email,
-          password: this.password,
+          email: this.loginEmail,
+          password: this.loginPassword,
           remember: true
         }, {
           only: ['user'],
@@ -202,10 +214,10 @@ export default {
     registerSubmit() {
       if (this.isRegisterValid) {
         router.post(route('register'), {
-          email: this.email,
-          password: this.password,
-          name: this.name,
-          number: this.number,
+          email: this.registerEmail,
+          password: this.registerPassword,
+          name: this.registerName,
+          number: this.registerNumber,
         }, {
           only: ['user'],
           preserveScroll: true,
@@ -226,16 +238,11 @@ import Button from '../Components/Button.vue'
 
 defineProps({
   user: Object,
-  status: String,
 })
 
 </script>
 
 <style scoped>
-.block {
-  background-color: #f9f7f7;
-}
-
 .nav-item:hover {
   background-color: #3F72AF;
   color: #DBE2EF;
@@ -248,7 +255,6 @@ defineProps({
   height: 100%;
   transition: all .1s ease-in-out;
 }
-
 .cart-btn {
   width: fit-content;
 }

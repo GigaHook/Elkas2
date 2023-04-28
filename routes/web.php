@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -21,12 +22,10 @@ use Inertia\Inertia;
 
 
 Route::get('/', function () {
-    return Inertia::render('Home', ['user' => Auth::user() ?: null]); 
+    return Inertia::render('Home', ['user' => Auth::user()]); 
 })->name('home');
 
-Route::get('/catalogue', function () {
-    return Inertia::render('Catalogue', ['user' => Auth::user() ?: null]); 
-})->name('catalogue');
+Route::get('/catalogue', [ProductController::class, 'index'])->name('catalogue');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
