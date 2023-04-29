@@ -22,7 +22,11 @@ use Inertia\Inertia;
 
 
 Route::get('/', function () {
-    return Inertia::render('Home', ['user' => Auth::user()]); 
+    return Inertia::render('Home', [
+        'page' => 'Home',
+        'title' => 'Главная',
+        'user' => Auth::user(),
+    ]);
 })->name('home');
 
 Route::get('/catalogue', [ProductController::class, 'index'])->name('catalogue');

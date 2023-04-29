@@ -12,8 +12,11 @@ class ProductController extends Controller
 {
     public static function index(): Response {
         return Inertia::render('Catalogue', [
+            'page' => 'Catalogue',
+            'title' => 'Каталог',
             'user' => Auth::user(),
-            'products' => Product::all(),
         ]);
     }
+
+    
 }

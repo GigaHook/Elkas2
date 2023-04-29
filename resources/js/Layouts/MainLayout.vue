@@ -1,4 +1,6 @@
 <template>
+  <Head :title="title"/>
+
   <v-app>
 
     <v-container style="height: 44px;">
@@ -15,30 +17,27 @@
     <v-row class="justify-center mt-3 mx-md-1 mx-lg-0">
       <!--content-->
       <v-col xl="7" lg="8" md="9" sm="12">
-        <v-card color="#f9f7f7" elevation="3">
-          <slot/>          
-        </v-card>
+        <slot/>    
+        
       </v-col>
-      
       <!--side-->
       <v-col xl="2" lg="3" md="3" sm="12">
-        <!--auth-->
-        <v-card v-if="!!user" class="pa-3" color="#f9f7f7" elevation="3">
-          <span>Статус: <b>Авторизованный пользователь</b></span>
-          <div class="d-flex flex-column">
-            <v-icon icon="mdi-account-check-outline" size="120" class="align-self-center"/>
-            <div class="text-h6 align-self-center mb-2">
-              {{ user.name }}
+        <v-scroll-x-transition hide-on-leave>
+          <!--auth-->
+          <v-card v-if="!!user" class="pa-3" color="#f9f7f7" elevation="3">
+            <span>Статус: <b>Авторизованный пользователь</b></span>
+            <div class="d-flex flex-column">
+              <v-icon icon="mdi-account-check-outline" size="120" class="align-self-center"/>
+              <div class="text-h6 align-self-center mb-2">
+                {{ user.name }}
+              </div>
+              Товаров в корзине: TODO <br>
+              <Link class="align-self-center"><v-btn variant="tonal" append-icon="mdi-arrow-right" style="color:black" v-ripple="{ class: `text-info` }">В корзину</v-btn></Link>
+              <Button @click="logout" class="mt-2 align-self-center">Выйти</Button>
             </div>
-            Товаров в корзине: TODO <br>
-            <Link class="align-self-center"><v-btn variant="tonal" append-icon="mdi-arrow-right" style="color:black" v-ripple="{ class: `text-info` }">В корзину</v-btn></Link>
-            <Link :href="route('logout')" method="post" as="button" class="mt-2" preserve-state preserve-scroll><Button>Выйти</Button></Link>
-          </div>
-        </v-card>
-        <!--guest-->
-        <v-slide-x-transition v-else hide-on-leave>
-          <!--login-->
-          <v-card v-if="loginVariant" class="pa-2" color="#f9f7f7" elevation="3">
+          </v-card>
+          <!--guest-->
+          <v-card v-else-if="loginVariant" class="pa-2" color="#f9f7f7" elevation="3">
             <span>Статус: <b>Гость</b></span>
             <v-form @submit.prevent="loginSubmit" v-model="isLoginValid" validate-on="blur" class="text-center">
               <v-icon icon="mdi-account-remove-outline" style="transform: scaleX(-1);" size="120"/> <!--mirror magic-->
@@ -52,6 +51,7 @@
                 color="#3F72AF"
                 bg-color="#DBE2EF"
                 variant="solo"
+                density="comfortable"
                 required
               />
               <v-text-field
@@ -59,13 +59,13 @@
                 v-model="loginPassword"
                 :rules="[rules.required, rules.range]"
                 label="Пароль"
-                hint="Минимум 8 символов"
+                hint="От 8 до 20 символов"
                 color="#3F72AF"
                 bg-color="#DBE2EF"
                 variant="solo"
+                density="comfortable"
                 required
               />
-              <!--<v-btn type="submit" class="btn-var-1">Войти</v-btn>-->
               <Button type="submit" class="mb-3">Войти</Button> <br>
               Нет аккаунта? <br>
               <v-btn 
@@ -94,6 +94,8 @@
                 bg-color="#DBE2EF"
                 color="#3F72AF"
                 variant="solo"
+                density="comfortable"
+                required
               />
               <v-text-field
                 type="email"
@@ -104,7 +106,8 @@
                 bg-color="#DBE2EF"
                 color="#3F72AF"
                 variant="solo"
-                solo
+                density="comfortable"
+                required
               />
               <v-text-field
                 type="tel"
@@ -117,6 +120,8 @@
                 bg-color="#DBE2EF"
                 color="#3F72AF"
                 variant="solo"
+                density="comfortable"
+                required
               />
               <v-text-field
                 type="password"
@@ -128,19 +133,23 @@
                 bg-color="#DBE2EF"
                 color="#3F72AF"
                 variant="solo"
+                density="comfortable"
+                required
               />
               <v-text-field
                 type="password"
                 v-model="repeat"
-                :rules="[rules.required, repeatRule]"
+                :rules="[rules.required, rules.repeatRule]"
                 maxlength="20"
                 label="Повторите пароль"
                 hint="От 8 до 20 символов"
                 bg-color="#DBE2EF"
                 color="#3F72AF"
                 variant="solo"
+                density="comfortable"
+                required
               />
-              <Button type="submit" class="mb-3">Зарегистрироваться</Button> <br>
+              <Button class="mb-3">Зарегистрироваться</Button> <br>
               Есть аккаунт? <br>
               <v-btn 
                 variant="text" 
@@ -153,41 +162,44 @@
               </v-btn>
             </v-form>
           </v-card>
-        </v-slide-x-transition>
+        </v-scroll-x-transition>
 
       </v-col>
     </v-row>
-
   </v-app>
+  
 </template>
 
 <script>
 export default {
+  props: {
+    user: Object,
+    page: String,
+    title: String,
+  },
 
-  data: () => ({
-    loginEmail: '',
-    loginPassword: '',
-    registerEmail: '',
-    registerPassword: '',
-    registerName: '',
-    registerNumber: '',
-    repeat: '',
-    rules: {
-      required: value => !!value || "Это обязательное поле",
-      email: value => (value.includes('@') && value.includes('.')) || "Неправильная почта",
-      range: value => (value.length >= 8 && value.length <= 20) || "От 8 до 20 символов"
-    },
-    loginVariant: true,
-    isLoginValid: true,
-    isRegisterValid: true,
-  }),
-
+  data() {
+    return {
+      loginEmail: '',
+      loginPassword: '',
+      registerEmail: '',
+      registerPassword: '',
+      registerName: '',
+      registerNumber: '',
+      repeat: '',
+      rules: {
+        required: value => !!value || "Это обязательное поле",
+        email: value => (value.includes('@') && value.includes('.')) || "Неправильная почта",
+        range: value => (value.length >= 8 && value.length <= 20) || "От 8 до 20 символов",
+        repeatRule: value => (value === this.password) || 'Пароли не совпадают'
+      },
+      loginVariant: true,
+      isLoginValid: true,
+      isRegisterValid: true,
+    }
+  },
 
   methods: {
-    repeatRule(value) {
-      return (value === this.password) || 'Пароли не совпадают'
-    },
-
     clearForms() {
       this.loginEmail = ''
       this.loginPassword = ''
@@ -202,13 +214,15 @@ export default {
         router.post(route('login'), {
           email: this.loginEmail,
           password: this.loginPassword,
-          remember: true
+          remember: true,
+          page: this.page,
+          title: this.title
         }, {
-          only: ['user'],
           preserveState: true,
           preserveScroll: true
         })
       }
+      this.clearForms()
     },
 
     registerSubmit() {
@@ -219,12 +233,23 @@ export default {
           name: this.registerName,
           number: this.registerNumber,
         }, {
-          only: ['user'],
           preserveScroll: true,
           preserveState: true
         })
       }
+      this.clearForms()
     },
+
+    logout() {
+      router.post(route('logout'), {
+        page: this.page,
+        title: this.title
+      }, {
+        preserveState: true,
+        preserveScroll: true
+      })
+    },
+
 
   }
 
@@ -233,12 +258,8 @@ export default {
 </script>
 
 <script setup>
-import { Link, router } from '@inertiajs/vue3';
+import { Link, Head, router } from '@inertiajs/vue3'
 import Button from '../Components/Button.vue'
-
-defineProps({
-  user: Object,
-})
 
 </script>
 
