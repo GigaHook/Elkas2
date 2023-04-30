@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,7 +30,15 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/catalogue', [ProductController::class, 'index'])->name('catalogue');
+Route::controller(ProductController::class)->prefix('products')->group(function() {
+    Route::get('/', 'index');
+    Route::get('/{id}', 'show');
+});
+
+Route::controller(ServiceController::class)->prefix('services')->group(function() {
+    Route::get('/', 'index');
+    Route::get('/{id}', 'show');
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

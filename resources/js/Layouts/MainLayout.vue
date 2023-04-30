@@ -6,8 +6,8 @@
     <v-container style="height: 44px;">
       <v-app-bar class="justify-center" color="#DBE2EF" style="height: 44px;" elevation="3">
         <Link class="nav-item" href="/"><v-btn class="rounded-0 nav-item">Главная</v-btn></Link>
-        <Link class="nav-item" href="/catalogue"><v-btn class="rounded-0 nav-item">Каталог</v-btn></Link>
-        <Link class="nav-item"><v-btn class="rounded-0 nav-item">Услуги</v-btn></Link>
+        <Link class="nav-item" href="/products"><v-btn class="rounded-0 nav-item">Каталог</v-btn></Link>
+        <Link class="nav-item" href="/services"><v-btn class="rounded-0 nav-item">Услуги</v-btn></Link>
         <Link class="nav-item"><v-btn class="rounded-0 nav-item">О нас</v-btn></Link>
         <Link class="nav-item me-auto"><v-btn class="rounded-0 nav-item">Контакты</v-btn></Link>
         <Link class="nav-item cart-btn"><v-btn class="rounded-0 nav-item cart-btn"><v-icon icon="mdi-cart-outline" size="30"/></v-btn></Link>
@@ -27,7 +27,7 @@
           <v-card v-if="!!user" class="pa-3" color="#f9f7f7" elevation="3">
             <span>Статус: <b>Авторизованный пользователь</b></span>
             <div class="d-flex flex-column">
-              <v-icon icon="mdi-account-check-outline" size="120" class="align-self-center"/>
+              <v-icon icon="mdi-account-check-outline" size="100" class="align-self-center"/>
               <div class="text-h6 align-self-center mb-2">
                 {{ user.name }}
               </div>
@@ -37,10 +37,10 @@
             </div>
           </v-card>
           <!--guest-->
-          <v-card v-else-if="loginVariant" class="pa-2" color="#f9f7f7" elevation="3">
+          <v-card v-else-if="loginVariant" class="pa-3" color="#f9f7f7" elevation="3">
             <span>Статус: <b>Гость</b></span>
             <v-form @submit.prevent="loginSubmit" v-model="isLoginValid" validate-on="blur" class="text-center">
-              <v-icon icon="mdi-account-remove-outline" style="transform: scaleX(-1);" size="120"/> <!--mirror magic-->
+              <v-icon icon="mdi-account-remove-outline" style="transform: scaleX(-1);" size="100"/> <!--mirror magic-->
               <div class="text-h6 mb-3">Войдите в аккаунт</div>
               <v-text-field
                 type="email"
@@ -139,7 +139,7 @@
               <v-text-field
                 type="password"
                 v-model="repeat"
-                :rules="[rules.required, rules.repeatRule]"
+                :rules="[rules.required, rules.repeat]"
                 maxlength="20"
                 label="Повторите пароль"
                 hint="От 8 до 20 символов"
@@ -149,7 +149,7 @@
                 density="comfortable"
                 required
               />
-              <Button class="mb-3">Зарегистрироваться</Button> <br>
+              <Button type="submit" class="mb-3">Зарегистрироваться</Button> <br>
               Есть аккаунт? <br>
               <v-btn 
                 variant="text" 
@@ -163,11 +163,9 @@
             </v-form>
           </v-card>
         </v-scroll-x-transition>
-
       </v-col>
     </v-row>
   </v-app>
-  
 </template>
 
 <script>
@@ -191,7 +189,7 @@ export default {
         required: value => !!value || "Это обязательное поле",
         email: value => (value.includes('@') && value.includes('.')) || "Неправильная почта",
         range: value => (value.length >= 8 && value.length <= 20) || "От 8 до 20 символов",
-        repeatRule: value => (value === this.password) || 'Пароли не совпадают'
+        repeat: value => (value === this.registerPassword) || 'Пароли не совпадают'
       },
       loginVariant: true,
       isLoginValid: true,
@@ -219,10 +217,12 @@ export default {
           title: this.title
         }, {
           preserveState: true,
-          preserveScroll: true
+          preserveScroll: true,
+          onSuccess: () => {
+            this.clearForms()
+          }
         })
       }
-      this.clearForms()
     },
 
     registerSubmit() {
@@ -232,12 +232,16 @@ export default {
           password: this.registerPassword,
           name: this.registerName,
           number: this.registerNumber,
+          page: this.page,
+          title: this.title
         }, {
           preserveScroll: true,
-          preserveState: true
+          preserveState: true,
+          onSuccess: () => {
+            this.clearForms()
+          }
         })
       }
-      this.clearForms()
     },
 
     logout() {

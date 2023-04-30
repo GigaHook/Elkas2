@@ -1,6 +1,6 @@
 <template>
 	<MainLayout :user="user" :page="page" :title="title">
-		<v-card class="pa-2" elevation="3" color="#f9f7f7">
+		<v-card class="pa-3" elevation="3" color="#f9f7f7">
 			<h1>Главная</h1>
 			{{ user?.name }}
 			<Link href="/dashboard"><v-btn>Дэшборд</v-btn></Link> <br>
@@ -22,7 +22,7 @@ export default {
 
 <script setup>
 import MainLayout from '@/Layouts/MainLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 
 defineProps({
   user: Object,

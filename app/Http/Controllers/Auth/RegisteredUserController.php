@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
-use Inertia\Response;
+use Inertia\Response as InertiaResponse;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
      */
-    public function create(): Response
+    public function create(): InertiaResponse
     {
         return Inertia::render('Auth/Register');
     }
@@ -29,13 +29,13 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): InertiaResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:'.User::class,
             'password' => 'required',
-            'number' => 'required',
+            'number' => 'required|',
         ]);
 
         $user = User::create([
@@ -45,11 +45,13 @@ class RegisteredUserController extends Controller
             'number' => $request->number
             
         ]);
-
+        
         event(new Registered($user));
-
         Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        return Inertia::render($request->page, [
+            'page' => $request->page,
+            'title' => $request->title,
+            'user' => Auth::user(),
+        ]);
     }
 }
