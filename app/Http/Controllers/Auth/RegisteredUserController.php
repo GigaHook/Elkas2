@@ -29,13 +29,13 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): InertiaResponse
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:'.User::class,
             'password' => 'required',
-            'number' => 'required|',
+            'number' => 'required',
         ]);
 
         $user = User::create([
@@ -45,13 +45,15 @@ class RegisteredUserController extends Controller
             'number' => $request->number
             
         ]);
-        
+
         event(new Registered($user));
         Auth::login($user);
-        return Inertia::render($request->page, [
-            'page' => $request->page,
-            'title' => $request->title,
-            'user' => Auth::user(),
-        ]);
+        return redirect()->back();
+        //return Inertia::render($request->page, [
+        //    'page' => $request->page,
+        //    'user' => Auth::user(),
+        //    'product' => $request->product,
+        //    'service' => $request->service,
+        //]);
     }
 }

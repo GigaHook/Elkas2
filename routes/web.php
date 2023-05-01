@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CartProductController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\CartServiceController;
+use App\Http\Controllers\ProfileController;
+use App\Models\CartProduct;
+use App\Models\CartService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,7 +29,6 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Home', [
         'page' => 'Home',
-        'title' => 'Главная',
         'user' => Auth::user(),
     ]);
 })->name('home');
@@ -35,10 +38,28 @@ Route::controller(ProductController::class)->prefix('products')->group(function(
     Route::get('/{id}', 'show');
 });
 
+Route::prefix('cart')->group(function() {
+    Route::get('/', function() {
+        return Inertia::render('Cart', [
+            'page' => 'Cart',
+            'user' => Auth::user(),
+        ]);
+    });
+
+    Route::prefix('product')->controller(CartProductController::class)->group(function() {
+        Route::post('/', 'store');
+    });
+
+    Route::prefix('service')->controller(CartServiceController::class)->group(function() {
+        Route::post('/', 'store');
+    });
+});
+
 Route::controller(ServiceController::class)->prefix('services')->group(function() {
     Route::get('/', 'index');
     Route::get('/{id}', 'show');
 });
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

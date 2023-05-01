@@ -13,8 +13,15 @@ class ServiceController extends Controller
     public function index(): InertiaResponse {
         return Inertia::render('Services', [
             'page' => 'Services',
-            'title' => 'Услуги',
             'user' => Auth::user(),
+        ]);
+    }
+
+    public function show(Int $id): InertiaResponse {
+        return Inertia::render('Service', [
+            'page' => 'Service',
+            'user' => Auth::user(),
+            'service' => Service::find($id),
         ]);
     }
 

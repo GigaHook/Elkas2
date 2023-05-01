@@ -1,5 +1,6 @@
 <template>
-	<MainLayout :user="user" :page="page" :title="title">
+	<Head title="Главная"/>
+	<MainLayout :user="user" :page="page">
 		<v-card class="pa-3" elevation="3" color="#f9f7f7">
 			<h1>Главная</h1>
 			{{ user?.name }}
@@ -22,12 +23,11 @@ export default {
 
 <script setup>
 import MainLayout from '@/Layouts/MainLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, Head } from '@inertiajs/vue3';
 
 defineProps({
   user: Object,
   page: String,
-  title: String,
 })
 </script>
 

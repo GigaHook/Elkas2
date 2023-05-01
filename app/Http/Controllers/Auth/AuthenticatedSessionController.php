@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -25,27 +26,31 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): InertiaResponse {
+    public function store(LoginRequest $request): RedirectResponse {
         $request->authenticate();
         $request->session()->regenerate();
-        return Inertia::render($request->page, [
-            'page' => $request->page,
-            'title' => $request->title,
-            'user' => Auth::user(),
-        ]);
+        return redirect()->back();
+        //return Inertia::render($request->page, [
+        //    'page' => $request->page,
+        //    'user' => Auth::user(),
+        //    'product' => $request->product,
+        //    'service' => $request->service,
+        //]);
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): InertiaResponse {
+    public function destroy(Request $request): RedirectResponse {
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return Inertia::render($request->page, [
-            'page' => $request->page,
-            'title' => $request->title,
-            'user' => Auth::user(),
-        ]);
+        return redirect()->back();
+        //return Inertia::render($request->page, [
+        //    'page' => $request->page,
+        //    'user' => Auth::user(),
+        //    'product' => $request->product,
+        //    'service' => $request->service,
+        //]);
     }
 }

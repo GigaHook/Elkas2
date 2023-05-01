@@ -31,7 +31,6 @@ class LoginRequest extends FormRequest
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
             'page' => ['required', 'string'],
-            'title' => ['required', 'string'],
             'user' => [User::class],
         ];
     }

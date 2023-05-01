@@ -1,6 +1,4 @@
 <template>
-  <Head :title="title"/>
-
   <v-app>
 
     <v-container style="height: 44px;">
@@ -174,6 +172,8 @@ export default {
     user: Object,
     page: String,
     title: String,
+    product: Object,
+    service: Object,
   },
 
   data() {
@@ -205,6 +205,7 @@ export default {
       this.registerPassword = ''
       this.registerName = ''
       this.registerNumber = ''
+      this.repeat = ''
     },
 
     loginSubmit() {
@@ -214,7 +215,8 @@ export default {
           password: this.loginPassword,
           remember: true,
           page: this.page,
-          title: this.title
+          product: this.product,
+          service: this.service, 
         }, {
           preserveState: true,
           preserveScroll: true,
@@ -233,7 +235,8 @@ export default {
           name: this.registerName,
           number: this.registerNumber,
           page: this.page,
-          title: this.title
+          product: this.product,
+          service: this.service,
         }, {
           preserveScroll: true,
           preserveState: true,
@@ -247,7 +250,8 @@ export default {
     logout() {
       router.post(route('logout'), {
         page: this.page,
-        title: this.title
+        product: this.product,
+        service: this.service,
       }, {
         preserveState: true,
         preserveScroll: true

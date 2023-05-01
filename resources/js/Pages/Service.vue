@@ -1,8 +1,8 @@
 <template>
-  <Head :title="product.name"/>
-  <MainLayout :user="user" :page="page" :product="product">
+  <Head :title="service.name"/>
+  <MainLayout :user="user" :page="page" :service="service">
     <v-card class="pa-3" color="#f9f7f7" elevation="3">
-      <div class="text-h5 mb-2">{{ product.name }}</div>
+      <div class="text-h5 mb-2">{{ service.name }}</div>
       <v-row>
         <v-col cols="6">
           <v-sheet class="w-100 text-center" style="aspect-ratio: 1 / 1;">
@@ -12,14 +12,11 @@
 
         <v-col cols="6">
           <div class="text-h6">Описание</div>
-          {{ product.description }}
+          {{ service.description }}
         </v-col>
       </v-row>
-      <div class="my-2 text-h6">Цена: ${{ product.price }}</div>
-      <div class="d-flex justify-space-between">
-        <Button>Добавить в корзину</Button>
-        
-      </div>
+      <div class="my-2 text-h6">Цена: ${{ service.price }}</div>
+      <Button>Добавить в корзину</Button>
     </v-card>
   </MainLayout>
 </template>
@@ -40,7 +37,7 @@ import Button from '../Components/Button.vue'
 defineProps({
   user: Object,
   page: String,
-  product: Object,
+  service: Object,
 })
 </script>
 

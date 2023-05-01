@@ -13,7 +13,6 @@ class ProductController extends Controller
     public function index(): InertiaResponse {
         return Inertia::render('Products', [
             'page' => 'Products',
-            'title' => 'Каталог',
             'user' => Auth::user(),
         ]);
     }
@@ -21,10 +20,8 @@ class ProductController extends Controller
     public function show(Int $id): InertiaResponse {
         return Inertia::render('Product', [
             'page' => 'Product',
-            'title' => Product::find($id)->name,
             'user' => Auth::user(),
             'product' => Product::find($id)
         ]);
     }
-
 }
