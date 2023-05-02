@@ -35,7 +35,7 @@
             </div>
           </v-card>
           <!--guest-->
-          <v-card v-else-if="loginVariant" class="pa-3" color="#f9f7f7" elevation="3">
+          <v-card v-else-if="formVariant" class="pa-3" color="#f9f7f7" elevation="3">
             <span>Статус: <b>Гость</b></span>
             <v-form @submit.prevent="loginSubmit" v-model="isLoginValid" validate-on="blur" class="text-center">
               <v-icon icon="mdi-account-remove-outline" style="transform: scaleX(-1);" size="100"/> <!--mirror magic-->
@@ -68,7 +68,7 @@
               Нет аккаунта? <br>
               <v-btn 
                 variant="text" 
-                @click="loginVariant = !loginVariant" 
+                @click="formVariant = !formVariant" 
                 append-icon="mdi-arrow-right" 
                 v-ripple="{ class: `text-info` }"
                 class="mt-1"
@@ -151,7 +151,7 @@
               Есть аккаунт? <br>
               <v-btn 
                 variant="text" 
-                @click="loginVariant = !loginVariant" 
+                @click="formVariant = !formVariant" 
                 append-icon="mdi-arrow-right" 
                 v-ripple="{ class: `text-info` }"
                 class="mt-1"
@@ -163,6 +163,19 @@
         </v-scroll-x-transition>
       </v-col>
     </v-row>
+
+    <v-snackbar 
+      v-model="feedback" 
+      timeout="3000" 
+      :color="feedbackResult"
+      variant="tonal"      
+    >
+      {{ feedbackText }}
+      <template v-slot:actions>
+        <v-btn @click="feedback = false" variant="plain"><v-icon icon="mdi-close"/></v-btn>
+      </template>
+    </v-snackbar>
+
   </v-app>
 </template>
 
@@ -170,10 +183,6 @@
 export default {
   props: {
     user: Object,
-    page: String,
-    title: String,
-    product: Object,
-    service: Object,
   },
 
   data() {
@@ -191,9 +200,12 @@ export default {
         range: value => (value.length >= 8 && value.length <= 20) || "От 8 до 20 символов",
         repeat: value => (value === this.registerPassword) || 'Пароли не совпадают'
       },
-      loginVariant: true,
+      formVariant: true,
       isLoginValid: true,
       isRegisterValid: true,
+      feedback: false,
+      feedbackResult: '',
+      feedbackText: '',
     }
   },
 
@@ -214,14 +226,19 @@ export default {
           email: this.loginEmail,
           password: this.loginPassword,
           remember: true,
-          page: this.page,
-          product: this.product,
-          service: this.service, 
         }, {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
+            this.feedbackText = 'Вы вошли в аккаунт'
+            this.feedbackResult = 'success'
+            this.feedback = true
             this.clearForms()
+          },
+          onError: () => {
+            this.feedbackText = 'Неверный логин или пароль'
+            this.feedbackResult = 'red-darken-3'
+            this.feedback = true
           }
         })
       }
@@ -234,14 +251,19 @@ export default {
           password: this.registerPassword,
           name: this.registerName,
           number: this.registerNumber,
-          page: this.page,
-          product: this.product,
-          service: this.service,
         }, {
           preserveScroll: true,
           preserveState: true,
           onSuccess: () => {
+            this.feedbackText = 'Вы успешно зарагистрировались'
+            this.feedbackResult = 'success'
+            this.feedback = true
             this.clearForms()
+          },
+          onError: () => {
+            this.feedbackText = 'Ошибка. Проверьте ваши данные'
+            this.feedbackResult = 'red-darken-3'
+            this.feedback = true
           }
         })
       }
@@ -249,12 +271,13 @@ export default {
 
     logout() {
       router.post(route('logout'), {
-        page: this.page,
-        product: this.product,
-        service: this.service,
-      }, {
         preserveState: true,
-        preserveScroll: true
+        preserveScroll: true,
+        onSuccess: () => {
+          this.feedbackText = 'Вы вышли из аккаунта' //TODO: Не робит + подогнать шаблон услуг под продукты
+          this.feedbackResult = 'primary'
+          this.feedback = true
+        }
       })
     },
 

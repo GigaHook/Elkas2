@@ -29,7 +29,6 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
-        'page' => 'Home',
         'user' => Auth::user(),
     ]);
 })->name('home');
@@ -42,7 +41,6 @@ Route::controller(ProductController::class)->prefix('products')->group(function(
 Route::prefix('cart')->group(function() {
     Route::get('/', function() {
         return Inertia::render('Cart', [
-            'page' => 'Cart',
             'user' => Auth::user(),
         ]);
     });

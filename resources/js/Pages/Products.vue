@@ -8,16 +8,16 @@
 						<v-card
 							:elevation="isHovering ? 10 : 3"
 							v-bind="props" 
+							@click="open(product.id)"
 							class="text-center px-3 pt-1 pb-3 card" 
-							color="#f9f7f7"
-              @click="open(product.id)"
+							variant="plain"
 						>
 							<div class="text-h6">{{ product.name }}</div>
-							<v-sheet class="my-1 w-100" style="aspect-ratio: 1 / 1;">img</v-sheet>
+							<v-sheet class="my-1 w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
 							<div class="my-1 text-h6">${{ product.price }}</div>
 							<Button 
-                @click="addToCart(product.id)" 
-                class="w-100" 
+                @click.stop="addToCart(product.id)"
+                class="w-100 buy-btn" 
                 :disabled="!user"
               >
                 Добавить в корзину
@@ -49,10 +49,12 @@ const addToCart = id => router.post('/cart/product', {
 
 const open = id => router.get('/products/' + id)
 
-  
-
 </script>
 
 <style scoped>
+.card{
+	background-color: #f9f7f7;
+	opacity: 1;
+}
 
 </style>

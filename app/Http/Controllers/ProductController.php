@@ -12,14 +12,12 @@ class ProductController extends Controller
 {
     public function index(): InertiaResponse {
         return Inertia::render('Products', [
-            'page' => 'Products',
             'user' => Auth::user(),
         ]);
     }
 
     public function show(Int $id): InertiaResponse {
         return Inertia::render('Product', [
-            'page' => 'Product',
             'user' => Auth::user(),
             'product' => Product::find($id)
         ]);
