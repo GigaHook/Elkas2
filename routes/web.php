@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Models\CartProduct;
 use App\Models\CartService;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
