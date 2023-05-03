@@ -1,6 +1,6 @@
 <template>
 	<Head title="Каталог"/>
-	<MainLayout :user="user" :page="page">
+	<MainLayout :user="user">
 		<v-row>
 			<template v-for="product in $page.props.products" :key="product.id">
 				<v-col xl="3" md="4" sm="6" v-if="product.available == true">

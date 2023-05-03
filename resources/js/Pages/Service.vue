@@ -1,6 +1,6 @@
 <template>
   <Head :title="service.name"/>
-  <MainLayout :user="user" :page="page" :service="service">
+  <MainLayout :user="user" :service="service">
     <v-card class="pa-3" color="#f9f7f7" elevation="3">
       <div class="text-h5 mb-2">{{ service.name }}</div>
       <v-row>

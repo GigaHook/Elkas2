@@ -1,6 +1,6 @@
 <template>
 	<Head title="Главная"/>
-	<MainLayout :user="user" :page="page">
+	<MainLayout :user="user">
 		<v-card class="pa-3" elevation="3" color="#f9f7f7">
 			<h1>Главная</h1>
 			{{ user?.name }}

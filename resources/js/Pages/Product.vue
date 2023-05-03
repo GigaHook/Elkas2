@@ -1,6 +1,6 @@
 <template>
   <Head :title="product.name"/>
-  <MainLayout :user="user" :page="page" :product="product">
+  <MainLayout :user="user" :product="product">
     <v-card class="pa-3" color="#f9f7f7" elevation="3">
       <div class="text-h5 mb-2">{{ product.name }}</div>
       <v-row>

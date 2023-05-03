@@ -15,8 +15,7 @@
     <v-row class="justify-center mt-3 mx-md-1 mx-lg-0">
       <!--content-->
       <v-col xl="7" lg="8" md="9" sm="12">
-        <slot/>    
-        
+        <slot/>
       </v-col>
       <!--side-->
       <v-col xl="2" lg="3" md="3" sm="12">
@@ -166,13 +165,17 @@
 
     <v-snackbar 
       v-model="feedback" 
-      timeout="3000" 
-      :color="feedbackResult"
-      variant="tonal"      
+      timeout="3000"
+      color="#f9f7f7"
+      transition="scroll-y-reverse-transition"
+      :open-delay="feedbackDelay"
     >
-      {{ feedbackText }}
+      <div style="color:black">
+        <v-icon :color="feedbackColor" :icon="feedbackIcon" size="20"/>
+        {{ feedbackText }}
+      </div>
       <template v-slot:actions>
-        <v-btn @click="feedback = false" variant="plain"><v-icon icon="mdi-close"/></v-btn>
+        <v-btn @click="feedback = false" variant="plain" color="black"><v-icon icon="mdi-close"/></v-btn>
       </template>
     </v-snackbar>
 
@@ -203,9 +206,12 @@ export default {
       formVariant: true,
       isLoginValid: true,
       isRegisterValid: true,
+      //snackbar
       feedback: false,
-      feedbackResult: '',
+      feedbackIcon: '',
       feedbackText: '',
+      feedbackColor: '',
+      feedbackDelay: 0,
     }
   },
 
@@ -220,6 +226,14 @@ export default {
       this.repeat = ''
     },
 
+    snackbar(text, icon='mdi-information-outline', color='info', delay=0) {
+      this.feedback = false
+      this.feedbackText = text
+      this.feedbackIcon = icon
+      this.feedbackColor = color
+      this.feedback = true
+    },
+
     loginSubmit() {
       if (this.isLoginValid) {
         router.post(route('login'), {
@@ -230,15 +244,11 @@ export default {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
-            this.feedbackText = 'Вы вошли в аккаунт'
-            this.feedbackResult = 'success'
-            this.feedback = true
+            this.snackbar('Вы вошли в аккаунт', 'mdi-account-check-outline', 'success')
             this.clearForms()
           },
           onError: () => {
-            this.feedbackText = 'Неверный логин или пароль'
-            this.feedbackResult = 'red-darken-3'
-            this.feedback = true
+            this.snackbar('Неверный логин или пароль', 'mdi-account-remove-outline', 'red-darken-2')
           }
         })
       }
@@ -255,29 +265,21 @@ export default {
           preserveScroll: true,
           preserveState: true,
           onSuccess: () => {
-            this.feedbackText = 'Вы успешно зарагистрировались'
-            this.feedbackResult = 'success'
-            this.feedback = true
+            this.snackbar('Вы успешно зарагистрировались', 'mdi-account-plus-outline', 'success')
             this.clearForms()
           },
           onError: () => {
-            this.feedbackText = 'Ошибка. Проверьте ваши данные'
-            this.feedbackResult = 'red-darken-3'
-            this.feedback = true
+            this.snackbar('Ошибка. Проверьте ваши данные', 'mdi-account-remove-outline', 'red-darken-2')
           }
         })
       }
     },
 
     logout() {
+      this.snackbar('Вы вышли из аккаунта')
       router.post(route('logout'), {
         preserveState: true,
         preserveScroll: true,
-        onSuccess: () => {
-          this.feedbackText = 'Вы вышли из аккаунта' //TODO: Не робит + подогнать шаблон услуг под продукты
-          this.feedbackResult = 'primary'
-          this.feedback = true
-        }
       })
     },
 
@@ -309,16 +311,5 @@ import Button from '../Components/Button.vue'
 }
 .cart-btn {
   width: fit-content;
-}
-
-:deep(.v-btn--active > .v-btn__overlay) {
-  /*magic 1*/
-  opacity: 0;
-}
-
-:deep(.v-btn--active > .v-btn__underlay) {
-  /*magic 2*/
-  background-color: #F38307;
-  z-index: -1;
 }
 </style>

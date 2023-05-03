@@ -1,6 +1,6 @@
 <template>
-	<Head title="Услуги"/>
-	<MainLayout :user="user" :page="page">
+	<Head title="Каталог"/>
+	<MainLayout :user="user">
 		<v-row>
 			<template v-for="service in $page.props.services" :key="service.id">
 				<v-col xl="3" md="4" sm="6" v-if="service.available == true">
@@ -8,14 +8,20 @@
 						<v-card
 							:elevation="isHovering ? 10 : 3"
 							v-bind="props" 
-							class="text-center px-3 pt-1 pb-3" 
-							color="#f9f7f7"
+							@click="open(service.id)"
+							class="text-center px-3 pt-1 pb-3 card" 
+							variant="plain"
 						>
 							<div class="text-h6">{{ service.name }}</div>
-							<v-sheet class="my-1 w-100" style="aspect-ratio: 1 / 1;">img</v-sheet>
+							<v-sheet class="my-1 w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
 							<div class="my-1 text-h6">${{ service.price }}</div>
-							<Button class="w-100">Добавить в корзину</Button>
-							<Link :href="'/services/' + service.id">asd</Link>
+							<Button 
+                @click.stop="addToCart(service.id)"
+                class="w-100 buy-btn" 
+                :disabled="!user"
+              >
+                Добавить в корзину
+              </Button>
 						</v-card>
 					</v-hover>
 				</v-col>
@@ -25,8 +31,8 @@
 </template>
 
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3';
-import MainLayout from '@/Layouts/MainLayout.vue';
+import { Link, Head, router } from '@inertiajs/vue3'
+import MainLayout from '@/Layouts/MainLayout.vue'
 import Button from '../Components/Button.vue'
 
 defineProps({
@@ -34,8 +40,21 @@ defineProps({
   page: String,
 })
 
+const addToCart = id => router.post('/cart/service', {
+	id: id,
+}, {
+	preserveState: true,
+	preserveScroll: true,
+})
+
+const open = id => router.get('/services/' + id)
+
 </script>
 
 <style scoped>
+.card{
+	background-color: #f9f7f7;
+	opacity: 1;
+}
 
 </style>
