@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\CartProductController;
 use App\Models\CartProduct;
 use App\Models\CartService;
 use App\Models\Product;

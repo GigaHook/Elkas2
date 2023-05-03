@@ -8,7 +8,7 @@
         <Link class="nav-item" href="/services"><v-btn class="rounded-0 nav-item">Услуги</v-btn></Link>
         <Link class="nav-item"><v-btn class="rounded-0 nav-item">О нас</v-btn></Link>
         <Link class="nav-item me-auto"><v-btn class="rounded-0 nav-item">Контакты</v-btn></Link>
-        <Link class="nav-item cart-btn"><v-btn class="rounded-0 nav-item cart-btn"><v-icon icon="mdi-cart-outline" size="30"/></v-btn></Link>
+        <Link class="nav-item cart-btn" :href="user? '/cart' : false"><v-btn class="rounded-0 nav-item cart-btn" :disabled="!user"><v-icon icon="mdi-cart-outline" size="30"/></v-btn></Link>
       </v-app-bar>
     </v-container>
 
@@ -168,7 +168,6 @@
       timeout="3000"
       color="#f9f7f7"
       transition="scroll-y-reverse-transition"
-      :open-delay="feedbackDelay"
     >
       <div style="color:black">
         <v-icon :color="feedbackColor" :icon="feedbackIcon" size="20"/>
@@ -211,7 +210,6 @@ export default {
       feedbackIcon: '',
       feedbackText: '',
       feedbackColor: '',
-      feedbackDelay: 0,
     }
   },
 
@@ -226,7 +224,7 @@ export default {
       this.repeat = ''
     },
 
-    snackbar(text, icon='mdi-information-outline', color='info', delay=0) {
+    snackbar(text, icon='mdi-information-outline', color='info') {
       this.feedback = false
       this.feedbackText = text
       this.feedbackIcon = icon
@@ -276,11 +274,12 @@ export default {
     },
 
     logout() {
-      this.snackbar('Вы вышли из аккаунта')
       router.post(route('logout'), {
         preserveState: true,
         preserveScroll: true,
+        onFinish: this.snackbar('Вы вышли из аккаунта')
       })
+      
     },
 
 

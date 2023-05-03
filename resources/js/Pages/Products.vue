@@ -37,7 +37,6 @@ import Button from '../Components/Button.vue'
 
 defineProps({
   user: Object,
-  page: String,
 })
 
 const addToCart = id => router.post('/cart/product', {
