@@ -8,13 +8,20 @@
         <Link class="nav-item" href="/services"><v-btn class="rounded-0 nav-item">Услуги</v-btn></Link>
         <Link class="nav-item"><v-btn class="rounded-0 nav-item">О нас</v-btn></Link>
         <Link class="nav-item me-auto"><v-btn class="rounded-0 nav-item">Контакты</v-btn></Link>
-        <Link class="nav-item cart-btn" :href="user? '/cart' : false"><v-btn class="rounded-0 nav-item cart-btn" :disabled="!user"><v-icon icon="mdi-cart-outline" size="30"/></v-btn></Link>
+
+        <Link v-if="!!user" class="nav-item cart-btn" href="/cart">
+          <v-btn class="rounded-0 nav-item cart-btn"><v-icon icon="mdi-cart-outline" size="30"/></v-btn>
+        </Link>
+        <span v-else class="cart-btn">
+          <v-btn class="rounded-0 nav-item cart-btn" disabled><v-icon icon="mdi-cart-outline" size="30"/></v-btn>
+        </span>
+
       </v-app-bar>
     </v-container>
 
     <v-row class="justify-center mt-3 mx-md-1 mx-lg-0">
       <!--content-->
-      <v-col xl="7" lg="8" md="9" sm="12">
+      <v-col lg="8" md="9" sm="12">
         <slot/>
       </v-col>
       <!--side-->
@@ -183,6 +190,9 @@
 
 <script>
 export default {
+
+  
+
   props: {
     user: Object,
   },

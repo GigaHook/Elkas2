@@ -43,10 +43,11 @@ Route::prefix('cart')->group(function() {
         return Inertia::render('Cart', [
             'user' => Auth::user(),
         ]);
-    });
+    })->middleware(['auth', 'verified']);
 
     Route::prefix('product')->controller(CartProductController::class)->group(function() {
         Route::post('/', 'store');
+        Route::delete('/{id}', 'delete');
     });
 
     Route::prefix('service')->controller(CartServiceController::class)->group(function() {

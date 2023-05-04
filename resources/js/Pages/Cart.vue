@@ -1,69 +1,17 @@
 <template>
-	<Head title="Каталог"/>
+	<Head title="Корзина"/>
 	<MainLayout :user="user">
+		
+		<CartBar :entries="products" :title="'Товары'"/>
 		<v-row>
-			<v-col cols="12">
-				<v-card
-					elevation="3"
-					class="pa-3 d-flex"
-					color="#f9f7f7"
-				>
-					<div class="text-h4 w-100">
-						Корзина
-					</div>
-					<div class="w-100">
-						<div class="text-h6 ">
-							Товары 
-						</div>
-						Всего товаров: {{ $page.props.cart.products.length }}
-					</div>
-					<div class="w-100">
-						<div class="text-h6 ">
-							Услуги
-						</div>
-						
-					</div>
-				</v-card>
-			</v-col>
+			<CartItem v-for="product in products" :key="product.id" :item="product" :type="'products'"/>
 		</v-row>
+		
+		<CartBar :entries="services" :title="'Услуги'"/>
 		<v-row>
-			<template v-for="product in $page.props.products" :key="product.id">
-				<v-col xl="3" md="4" sm="6" v-if="product.available == true">
-					<v-hover v-slot="{ isHovering, props }">
-						<v-card
-							:elevation="isHovering ? 10 : 3"
-							v-bind="props" 
-							@click="router.get('/products/' + product.id)"
-							class="text-center px-3 pt-1 pb-3 card" 
-							variant="plain"
-						>
-							<div class="text-h6">{{ product.name }}</div>
-							<v-sheet class="my-1 w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
-							<div class="my-1 text-h6">${{ product.price }}</div>
-						</v-card>
-					</v-hover>
-				</v-col>
-			</template>
+			<CartItem v-for="service in services" :key="service.id" :item="service" :type="'services'"/>
 		</v-row>
-		<v-row>
-			<template v-for="product in $page.props.products" :key="product.id">
-				<v-col xl="3" md="4" sm="6" v-if="product.available == true">
-					<v-hover v-slot="{ isHovering, props }">
-						<v-card
-							:elevation="isHovering ? 10 : 3"
-							v-bind="props" 
-							@click="router.get('/products/' + product.id)"
-							class="text-center px-3 pt-1 pb-3 card" 
-							variant="plain"
-						>
-							<div class="text-h6">{{ product.name }}</div>
-							<v-sheet class="my-1 w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
-							<div class="my-1 text-h6">${{ product.price }}</div>
-						</v-card>
-					</v-hover>
-				</v-col>
-			</template>
-		</v-row>
+
 	</MainLayout>
 </template>
 
@@ -72,21 +20,31 @@ export default {
 	data() {
 		return {
 			products: this.getProducts(),
+			services: this.getServices(),
 		}
 	},
 
 	methods: {
 		getProducts() {
 			const products = []
-			//for (const cartItem of this.$page.props.cart.products) {
-			//	let product = this.$page.props.products.filter(product => product.id = cartItem.product_id)
-			//	products.push(product)
-			//	alert(products)
-			//	//product.count = cartItem.count
-			//	//products.push(product)
-			//}
-			
+			for (const cartItem of this.$page.props.cart.products) {
+				let product = this.$page.props.products.find(product => product.id == cartItem.product_id)
+				product.count = cartItem.count
+				products.push(product)	//products.push(product)
+			}
+			return products
 		},
+
+		getServices() {
+			const services = []
+			for (const cartItem of this.$page.props.cart.services) {
+				let service = this.$page.props.services.find(service => service.id == cartItem.service_id)
+				service.count = cartItem.count
+				services.push(service)	//services.push(service)
+			}
+			return services
+		},
+
 	}
 
 }
@@ -99,6 +57,8 @@ export default {
 import { Link, Head, router } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import Button from '../Components/Button.vue'
+import CartBar from '../Components/CartBar.vue'
+import CartItem from '../Components/CartItem.vue'
 
 defineProps({
   user: Object,
@@ -106,9 +66,6 @@ defineProps({
 </script>
 
 <style scoped>
-.card{
-	background-color: #f9f7f7;
-	opacity: 1;
-}
+
 
 </style>
