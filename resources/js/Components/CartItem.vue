@@ -23,9 +23,9 @@
 					</span>
 					<v-toolbar-items>
 						<v-btn icon="mdi-plus"/>
-						<v-btn icon="mdi-minus"/>
+						<v-btn icon="mdi-minus"/> <!--TODO: Смена цены за всё и за 1 шт-->
 						<v-btn
-							@click.stop="router.delete(`/cart/product/${item.id}`, { id: item.id })" 
+							@click.stop="deleteItem(item.id)" 
 							icon="mdi-trash-can-outline" 
 							color="error"
 						/>
@@ -45,7 +45,11 @@ export default {
   },
 
 	methods: {
-		
+		deleteItem(id) {
+			router.delete(`/cart/product/${id}`, { id: id })
+			this.$emit('update')
+			this.$emit('update2')
+		}
 	},
 
   data() {

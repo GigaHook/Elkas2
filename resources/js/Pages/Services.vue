@@ -14,7 +14,8 @@
 						>
 							<div class="text-h6">{{ service.name }}</div>
 							<v-sheet class="my-1 w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
-							<div class="my-1 text-h6">${{ service.price }}</div>
+							<div class="text-h6">${{ service.price }}</div>
+							<v-divider class="mb-3"/>
 							<Button 
                 @click.stop="addToCart(service.id)"
                 class="w-100 buy-btn" 
