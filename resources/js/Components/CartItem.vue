@@ -21,14 +21,10 @@
 					<span class="text-subtitle me-auto px-auto ps-1">
 						Кол-во: {{ item.count }}
 					</span>
-					<v-toolbar-items>
-						<v-btn icon="mdi-plus"/>
-						<v-btn icon="mdi-minus"/> <!--TODO: Смена цены за всё и за 1 шт-->
-						<v-btn
-							@click.stop="deleteItem(item.id)" 
-							icon="mdi-trash-can-outline" 
-							color="error"
-						/>
+					<v-toolbar-items><!--TODO: Смена цены за всё и за 1 шт-->
+						<v-btn @click.stop="cartAddItem(item.id)" icon="mdi-plus"/>
+						<v-btn @click.stop="cartRemoveItem(item.id)" icon="mdi-minus"/> 
+						<v-btn @click.stop="cartDeleteItem(item.id)" icon="mdi-trash-can-outline" color="error"/>
 					</v-toolbar-items>
 				</v-toolbar>
 			</v-card>
@@ -45,10 +41,40 @@ export default {
   },
 
 	methods: {
-		deleteItem(id) {
-			router.delete(`/cart/product/${id}`, { id: id })
-			this.$emit('update', { action: 'delete', id: id })
-		}
+		cartDeleteItem(id) {
+			this.$emit('delete', id, this.type)
+			router.delete(`/cart/product/${id}`, { 
+				id: id 
+			}, {
+				preserveState: true,
+				preserveScroll: true,
+			})
+		},
+
+		cartAddItem(id) {
+			this.$emit('add', id, this.type)
+			router.post('/cart/product', {
+				id: id,
+				action: 'add'
+			}, {
+				preserveState: true,
+				preserveScroll: true,
+			})
+		},
+
+		cartRemoveItem(id) {
+			this.$emit('remove', id, this.type)
+			router.post('/cart/product', {
+				id: id,
+				action: 'remove'
+			}, {
+				preserveState: true,
+				preserveScroll: true,
+			})
+		},
+
+		
+
 	},
 
   data() {

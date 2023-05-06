@@ -9,8 +9,10 @@
 				:key="product.id"
 				:item="product"
 				:type="'products'"
-				@update="update"
-				/>
+				@add="cartAddItem"
+				@remove="cartRemoveItem"
+				@delete="cartDeleteItem"
+			/>
 		</v-row>
 		
 		<!--<CartBar :entries="services" :title="'Услуги'"/>
@@ -48,11 +50,14 @@ export default {
 	},
 
 	methods: {	
-		update(context) {
-			if (context.action == 'delete') {
-				this.products.splice(this.products.findIndex(elem => elem.id == context.id), 1)
-			}
-		}
+
+		cartAddItem(id, type) {
+
+		},
+
+
+
+
 	}
 
 }

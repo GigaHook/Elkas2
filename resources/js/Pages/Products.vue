@@ -8,7 +8,7 @@
 						<v-card
 							:elevation="isHovering ? 10 : 3"
 							v-bind="props" 
-							@click="open(product.id)"
+							@click="router.get('/products/' + product.id)"
 							class="text-center px-3 pt-1 pb-3 card" 
 							variant="plain"
 						>
@@ -48,7 +48,6 @@ const addToCart = id => router.post('/cart/product', {
 	preserveScroll: true,
 })
 
-const open = id => router.get('/products/' + id)
 
 </script>
 
