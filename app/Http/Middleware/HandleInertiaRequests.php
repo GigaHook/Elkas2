@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\CartProductController;
+use App\Http\Controllers\CartServiceController;
 use App\Models\CartProduct;
 use App\Models\CartService;
 use App\Models\Product;
@@ -40,8 +41,8 @@ class HandleInertiaRequests extends Middleware
             'products' => Product::all(),
             'services' => Service::all(),
             'cart' => [
-                'products' => CartProduct::where('user_id', Auth::id())->get(),
-                'services' => CartService::where('user_id', Auth::id())->get(),
+                'products' => CartProductController::get(),
+                'services' => CartServiceController::get(),
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [

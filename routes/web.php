@@ -42,14 +42,11 @@ Route::prefix('cart')->group(function() {
     Route::get('/', function() {
         return Inertia::render('Cart', [
             'user' => Auth::user(),
-            'cart' => [
-                'products' => CartProduct::where('user_id', Auth::id())->get(),
-                'services' => CartService::where('user_id', Auth::id())->get(),
-            ],
         ]);
     })->middleware(['auth', 'verified']);
 
     Route::prefix('product')->controller(CartProductController::class)->group(function() {
+        Route::get('/', 'index');
         Route::post('/', 'store');
         Route::delete('/{id}', 'delete');
     });

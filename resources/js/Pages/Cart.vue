@@ -9,14 +9,14 @@
 				:key="product.id"
 				:item="product"
 				:type="'products'"
-				@update="getProducts"
+				@update="update"
 				/>
 		</v-row>
 		
-		<CartBar :entries="services" :title="'Услуги'"/>
+		<!--<CartBar :entries="services" :title="'Услуги'"/>
 		<v-row>
 			<CartItem v-for="service in services" :key="service.id" :item="service" :type="'services'"/>
-		</v-row>
+		</v-row>-->
 
 	</MainLayout>
 </template>
@@ -39,45 +39,26 @@ defineProps({
 export default {
 	data() {
 		return {
-			products: [], //TODO РОБИТ ПОСЛЕ ВТОРОЙ ПЕРЕЗАГРУЗКИ
-			services: this.getServices(),
+			products: [],
 		}
 	},
 
 	mounted() {
-		this.getProducts()
+		this.products = this.$page.props.cart.products
 	},
 
-	methods: {
-		getProducts() {
-			this.products = []
-			for (const cartItem of this.cart.products) {
-				let product = this.$page.props.products.find(product => product.id == cartItem.product_id)
-				product.count = cartItem.count
-				this.products.push(product)
+	methods: {	
+		update(context) {
+			if (context.action == 'delete') {
+				this.products.splice(this.products.findIndex(elem => elem.id == context.id), 1)
 			}
-		},
-
-		getServices() {
-			let services = []
-			for (const cartItem of this.cart.services) {
-				let service = this.$page.props.services.find(service => service.id == cartItem.service_id)
-				service.count = cartItem.count
-				services.push(service)	//services.push(service)
-			}
-			return services
-		},
-
+		}
 	}
 
 }
 
-
 </script>
 
-
-
 <style scoped>
-
 
 </style>

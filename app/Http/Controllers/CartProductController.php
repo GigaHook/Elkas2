@@ -12,6 +12,7 @@ use Inertia\Response as InertiaResponse;
 
 class CartProductController extends Controller
 {
+    
     public function store(Request $request): RedirectResponse {
         if ($request->action == 'add') { //ADD OR CREATE
             $product = CartProduct::firstOrCreate([
@@ -37,11 +38,19 @@ class CartProductController extends Controller
         return redirect()->back();
     }
 
+    public static function get(): Array {
+        $products = [];
+        $cartProducts = CartProduct::where('user_id', Auth::id())->get();
+        foreach ($cartProducts as $cartProduct) {
+            $product = Product::find($cartProduct->product_id);
+            $product->count = $cartProduct->count;
+            $products[] = $product;
+        }
+        return $products;
+    }
+
     public function delete(Request $request): RedirectResponse {
         CartProduct::where(['product_id' => $request->id, 'user_id' => Auth::id()])->delete();
         return redirect()->back();
     }
-
-
-
 }

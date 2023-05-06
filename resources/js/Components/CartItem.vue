@@ -47,8 +47,7 @@ export default {
 	methods: {
 		deleteItem(id) {
 			router.delete(`/cart/product/${id}`, { id: id })
-			this.$emit('update')
-			this.$emit('update2')
+			this.$emit('update', { action: 'delete', id: id })
 		}
 	},
 
