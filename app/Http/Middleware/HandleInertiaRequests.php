@@ -41,8 +41,8 @@ class HandleInertiaRequests extends Middleware
             'products' => Product::all(),
             'services' => Service::all(),
             'cart' => [
-                'products' => CartProductController::get(),
-                'services' => CartServiceController::get(),
+                'products' => CartProductController::index(),
+                'services' => CartServiceController::index(),
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [

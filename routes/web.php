@@ -48,11 +48,15 @@ Route::prefix('cart')->group(function() {
     Route::prefix('product')->controller(CartProductController::class)->group(function() {
         Route::get('/', 'index');
         Route::post('/', 'store');
+        Route::patch('/{id}', 'update');
         Route::delete('/{id}', 'delete');
     });
 
     Route::prefix('service')->controller(CartServiceController::class)->group(function() {
+        Route::get('/', 'index');
         Route::post('/', 'store');
+        Route::patch('/{id}', 'update');
+        Route::delete('/{id}', 'delete');
     });
 });
 

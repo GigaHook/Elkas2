@@ -12,32 +12,7 @@ use Inertia\Response as InertiaResponse;
 
 class CartServiceController extends Controller
 {
-    public function store(Request $request): RedirectResponse {
-        if ($request->action == 'add') { //ADD OR CREATE
-            $service = CartService::firstOrCreate([
-                'service_id' => $request->id,
-                'user_id' => Auth::id(),
-            ], [
-                'count' => 1
-            ]);
-            if (!$service->wasRecentlyCreated) {
-                $service->count++;
-                $service->save();
-            }
-        } else { //DECREASE OR DELETE
-            $service = CartService::find($request->id);
-            if ($service->count == 1) {
-                $service->delete();
-            } else {
-                $service->count--;
-                $service->save();
-            }
-        }
-
-        return redirect()->back();
-    }
-
-    public static function get(): Array {
+    public static function index(): Array {
         $services = [];
         $cartservices = CartService::where('user_id', Auth::id())->get();
         foreach ($cartservices as $cartservice) {
@@ -47,9 +22,23 @@ class CartServiceController extends Controller
         }
         return $services;
     }
-
-    public function delete(Request $request): RedirectResponse {
+    public function store(Request $request): Void {
+        $service = CartService::firstOrCreate([
+            'service_id' => $request->id,
+            'user_id' => Auth::id(),
+        ], [
+            'count' => 1
+        ]);
+        if ($service->wasRecentlyCreated) return;
+        $service->count++;
+        $service->save();
+    }
+    public function update(Int $id): Void {
+        $service = CartService::where(['service_id' => $id, 'user_id' => Auth::id()])->first();
+        $service->count--;
+        $service->save();
+    }
+    public function delete(Request $request): Void {
         CartService::where(['service_id' => $request->id, 'user_id' => Auth::id()])->delete();
-        return redirect()->back();
     }
 }

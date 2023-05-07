@@ -26,7 +26,7 @@
       </v-col>
       <!--side-->
       <v-col xl="2" lg="3" md="3" sm="12">
-        <v-scroll-x-transition hide-on-leave>
+        <v-scroll-x-transition leave-absolute>
           <!--auth-->
           <v-card v-if="!!user" class="pa-3" color="#f9f7f7" elevation="3">
             <span>Статус: <b>Авторизованный пользователь</b></span>
@@ -190,9 +190,6 @@
 
 <script>
 export default {
-
-  
-
   props: {
     user: Object,
   },

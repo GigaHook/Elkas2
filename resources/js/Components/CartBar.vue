@@ -17,7 +17,10 @@
             </div>
           </v-toolbar-title>
           <v-toolbar-items>
-            <v-btn color="error"><v-icon icon="mdi-trash-can-outline" size="30"/></v-btn>
+            <v-btn @click="changePriceVariant">
+              <v-icon :icon="priceVariant ? 'mdi-tag-multiple' : 'mdi-tag-multiple-outline'" size="30"/>
+            </v-btn>
+            <v-btn color="error"><v-icon icon="mdi-delete-forever-outline" size="30"/></v-btn>
           </v-toolbar-items>
         </v-toolbar>
 			</v-col>
@@ -33,11 +36,16 @@
 
     data() {
       return {
-        
+        priceVariant: false
       }
     },
 
     methods: {
+      changePriceVariant() {
+        this.priceVariant = !this.priceVariant
+        this.$emit('changePriceVariant')
+      },
+
       totalPrice() {
         let total = 0
         this.entries.forEach(item => {
