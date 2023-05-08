@@ -50,6 +50,7 @@ Route::prefix('cart')->group(function() {
         Route::post('/', 'store');
         Route::patch('/{id}', 'update');
         Route::delete('/{id}', 'delete');
+        Route::delete('/', 'clear');
     });
 
     Route::prefix('service')->controller(CartServiceController::class)->group(function() {
@@ -57,6 +58,7 @@ Route::prefix('cart')->group(function() {
         Route::post('/', 'store');
         Route::patch('/{id}', 'update');
         Route::delete('/{id}', 'delete');
+        Route::delete('/', 'clear');
     });
 });
 

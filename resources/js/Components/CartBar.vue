@@ -20,51 +20,57 @@
             <v-btn @click="changePriceVariant">
               <v-icon :icon="priceVariant ? 'mdi-tag-multiple' : 'mdi-tag-multiple-outline'" size="30"/>
             </v-btn>
-            <v-btn color="error"><v-icon icon="mdi-delete-forever-outline" size="30"/></v-btn>
+            <v-btn @click="$emit('clear', type)" color="error">
+              <v-icon icon="mdi-delete-forever-outline" size="30"/>
+            </v-btn>
           </v-toolbar-items>
         </v-toolbar>
 			</v-col>
 		</v-row>
 </template>
 
+<script setup>
+import { router } from '@inertiajs/vue3'
+</script>
+
 <script>
-  export default {
-    props: {
-      entries: Object,
-      title: String
-    },
+export default {
+  props: {
+    entries: Object,
+    title: String,
+    type: String,
+  },
 
-    data() {
-      return {
-        priceVariant: false
-      }
-    },
-
-    methods: {
-      changePriceVariant() {
-        this.priceVariant = !this.priceVariant
-        this.$emit('changePriceVariant')
-      },
-
-      totalPrice() {
-        let total = 0
-        this.entries.forEach(item => {
-          total += item.price * item.count
-        })
-        return total
-      },
-      totalItems() {
-        let total = 0
-        this.entries.forEach(item => {
-          total += item.count
-        })
-        return total
-      }
-
-      
+  data() {
+    return {
+      priceVariant: false
     }
+  },
 
+  methods: {
+    changePriceVariant() {
+      this.priceVariant = !this.priceVariant
+      this.$emit('changePriceVariant')
+    },
+
+    totalPrice() {
+      let total = 0
+      this.entries.forEach(item => {
+        total += item.price * item.count
+      })
+      return total
+    },
+
+    totalItems() {
+      let total = 0
+      this.entries.forEach(item => {
+        total += item.count
+      })
+      return total
+    }
+    
   }
+}
 </script>
 
 <style scoped>

@@ -169,12 +169,11 @@
         </v-scroll-x-transition>
       </v-col>
     </v-row>
-
+    
     <v-snackbar 
       v-model="feedback" 
       timeout="3000"
       color="#f9f7f7"
-      transition="scroll-y-reverse-transition"
     >
       <div style="color:black">
         <v-icon :color="feedbackColor" :icon="feedbackIcon" size="20"/>
@@ -192,6 +191,15 @@
 export default {
   props: {
     user: Object,
+  },
+
+  watch: {
+    '$page.props.cart': {
+      handler() {
+        console.log('asd');
+      },
+      deep: true
+    }
   },
 
   data() {
@@ -231,7 +239,7 @@ export default {
       this.repeat = ''
     },
 
-    snackbar(text, icon='mdi-information-outline', color='info') {
+    notify(text, icon = 'mdi-information-outline', color = 'info') {
       this.feedback = false
       this.feedbackText = text
       this.feedbackIcon = icon
@@ -249,12 +257,10 @@ export default {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
-            this.snackbar('Вы вошли в аккаунт', 'mdi-account-check-outline', 'success')
+            this.notify('Вы вошли в аккаунт', 'mdi-account-check-outline', 'success')
             this.clearForms()
           },
-          onError: () => {
-            this.snackbar('Неверный логин или пароль', 'mdi-account-remove-outline', 'red-darken-2')
-          }
+          onError: () => this.notify('Неверный логин или пароль', 'mdi-account-remove-outline', 'red-darken-2')
         })
       }
     },
@@ -270,12 +276,10 @@ export default {
           preserveScroll: true,
           preserveState: true,
           onSuccess: () => {
-            this.snackbar('Вы успешно зарагистрировались', 'mdi-account-plus-outline', 'success')
+            this.notify('Вы успешно зарагистрировались', 'mdi-account-plus-outline', 'success')
             this.clearForms()
           },
-          onError: () => {
-            this.snackbar('Ошибка. Проверьте ваши данные', 'mdi-account-remove-outline', 'red-darken-2')
-          }
+          onError: () => this.notify('Ошибка. Проверьте ваши данные', 'mdi-account-remove-outline', 'red-darken-2')
         })
       }
     },
@@ -284,11 +288,9 @@ export default {
       router.post(route('logout'), {
         preserveState: true,
         preserveScroll: true,
-        onFinish: this.snackbar('Вы вышли из аккаунта')
+        onFinish: this.notify('Вы вышли из аккаунта')
       })
-      
     },
-
 
   }
 

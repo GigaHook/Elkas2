@@ -41,4 +41,7 @@ class CartServiceController extends Controller
     public function delete(Request $request): Void {
         CartService::where(['service_id' => $request->id, 'user_id' => Auth::id()])->delete();
     }
+    public function clear(): Void {
+        CartService::where(['user_id' => Auth::id()])->delete();
+    }
 }

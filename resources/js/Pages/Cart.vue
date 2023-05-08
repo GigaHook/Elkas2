@@ -3,7 +3,13 @@
 	<MainLayout :user="user">
 		<v-slide-y-transition group leave-absolute>
 
-			<CartBar :entries="products" :title="'Товары'" @changePriceVariant="productsPriceVariant = !productsPriceVariant"/>
+			<CartBar
+				:entries="products" 
+				:title="'Товары'" 
+				:type="'product'"
+				@changePriceVariant="productsPriceVariant = !productsPriceVariant"
+				@clear="cartClearItems"
+			/>
 		
 			<v-row v-if="products.length > 0">
 				<v-slide-y-transition group leave-absolute>
@@ -22,7 +28,13 @@
 			
 			<v-divider class="my-5"/>
 
-			<CartBar :entries="services" :title="'Услуги'" @changePriceVariant="servicesPriceVariant = !servicesPriceVariant"/>
+			<CartBar 
+				:entries="services" 
+				:title="'Услуги'" 
+				:type="'service'"
+				@changePriceVariant="servicesPriceVariant = !servicesPriceVariant"
+				@clear="cartClearItems"
+			/>
 	
 			<v-row>
 				<v-slide-y-transition group leave-absolute>
@@ -74,25 +86,30 @@ export default {
 	},
 
 	methods: {	
-		defineType(type) {
+		defineType(type) { //GET PRODUCTS/SERVICES
 			return type == 'product' ? this.products : this.services
 		},
 
-		cartAddItem(id, type) {
+		cartAddItem(id, type) { //ADD
 			router.post(`/cart/${type}`, { id: id, }, { preserveState: true, preserveScroll: true })
 			this.defineType(type).find(elem => elem.id == id).count++
 		},
 
-		cartRemoveItem(id, type) {
+		cartRemoveItem(id, type) { //REMOVE
 			if (this.defineType(type).find(elem => elem.id == id).count == 1) return this.cartDeleteItem(id, type) 
 			router.patch(`/cart/${type}/${id}`, { preserveState: true, preserveScroll: true })
 			this.defineType(type).find(elem => elem.id == id).count--
 		},
 
-		cartDeleteItem(id, type) {
+		cartDeleteItem(id, type) { //DELETE
 			router.delete(`/cart/${type}/${id}`, { preserveState: true, preserveScroll: true, })
 			this.defineType(type).splice(this.defineType(type).findIndex(elem => elem.id == id), 1)
-		}
+		},
+
+		cartClearItems(type) { //CLEAR
+			router.delete(`cart/${type}`)
+			this.defineType(type).splice(0, this.defineType(type).length)
+		},
 
 	}
 }

@@ -41,4 +41,7 @@ class CartProductController extends Controller
     public function delete(Int $id): Void {
         CartProduct::where(['product_id' => $id, 'user_id' => Auth::id()])->delete();
     }
+    public function clear(): void {
+        CartProduct::where(['user_id' => Auth::id()])->delete();
+    }
 }
