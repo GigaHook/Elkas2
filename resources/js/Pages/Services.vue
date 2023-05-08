@@ -1,6 +1,10 @@
 <template>
 	<Head title="Каталог"/>
-	<MainLayout :user="user">
+	<MainLayout 
+		:user="user"
+		:cartUpdate="cartUpdate"
+		@cartEndUpdate="cartUpdate = null"
+	>
 		<v-row>
 			<template v-for="service in $page.props.services" :key="service.id">
 				<v-col xl="3" md="4" sm="6" v-if="service.available == true">
@@ -8,7 +12,7 @@
 						<v-card
 							:elevation="isHovering ? 10 : 3"
 							v-bind="props" 
-							@click="open(service.id)"
+							@click="router.get('/services/' + service.id)"
 							class="text-center px-3 pt-1 pb-3 card" 
 							variant="plain"
 						>
@@ -17,7 +21,7 @@
 							<div class="text-h6">${{ service.price }}</div>
 							<v-divider class="mb-3"/>
 							<Button 
-                @click.stop="addToCart(service.id)"
+                @click.stop="cartAddItem(service)"
                 class="w-100 buy-btn" 
                 :disabled="!user"
               >
@@ -31,24 +35,31 @@
 	</MainLayout>
 </template>
 
+<script>
+export default {
+	data() {
+		return {
+			cartUpdate: null,
+		}
+	},
+
+	methods: {
+		cartAddItem(service) {
+  	  router.post('/cart/service', { id: service.id, }, { preserveState: true, preserveScroll: true })
+  	  this.cartUpdate = { action: 'add', type: 'service', item: service } 
+  	},
+	},
+}
+</script>
+
 <script setup>
-import { Link, Head, router } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import Button from '../Components/Button.vue'
 
 defineProps({
   user: Object,
-  page: String,
 })
-
-const addToCart = id => router.post('/cart/service', {
-	id: id,
-}, {
-	preserveState: true,
-	preserveScroll: true,
-})
-
-const open = id => router.get('/services/' + id)
 
 </script>
 

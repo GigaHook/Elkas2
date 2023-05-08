@@ -35,8 +35,6 @@
               <div class="text-h6 align-self-center mb-2">
                 {{ user.name }}
               </div>
-              Товаров в корзине: TODO <br>
-              <Link class="align-self-center"><v-btn variant="tonal" append-icon="mdi-arrow-right" style="color:black" v-ripple="{ class: `text-info` }">В корзину</v-btn></Link>
               <Button @click="logout" class="mt-2 align-self-center">Выйти</Button>
             </div>
           </v-card>
@@ -169,18 +167,20 @@
         </v-scroll-x-transition>
       </v-col>
     </v-row>
-    
+
     <v-snackbar 
       v-model="feedback" 
-      timeout="3000"
+      :timeout="feedbackTimeOut"
       color="#f9f7f7"
     >
-      <div style="color:black">
-        <v-icon :color="feedbackColor" :icon="feedbackIcon" size="20"/>
+      <div style="color:black" class="d-flex align-center">
+        <v-icon :color="feedbackColor" :icon="feedbackIcon" size="30" class="me-2"/>
         {{ feedbackText }}
       </div>
       <template v-slot:actions>
-        <v-btn @click="feedback = false" variant="plain" color="black"><v-icon icon="mdi-close"/></v-btn>
+        <v-btn @click="feedback = false" variant="plain" color="black">
+          <v-icon icon="mdi-close"/>
+        </v-btn>
       </template>
     </v-snackbar>
 
@@ -191,14 +191,37 @@
 export default {
   props: {
     user: Object,
+    cartUpdate: Object,
   },
 
   watch: {
-    '$page.props.cart': {
-      handler() {
-        console.log('asd');
-      },
-      deep: true
+    cartUpdate(data) {
+      if (!data) return
+      let text
+      let icon
+      switch (data.action) {
+        case 'add': 
+          text = data.type == 'product'
+          ? `Товар ${data.item.name} добавлен в корзину`
+          : `Услуга ${data.item.name} добавлена в корзину`
+          icon = 'mdi-cart-arrow-down'
+          break
+        case 'delete':
+          text = data.type == 'product'
+          ? `Товар ${data.item.name} удалён из корзины`
+          : `Услуга ${data.item.name} удалена из корзины`
+          icon = 'mdi-cart-remove'
+          break
+        case 'clear':
+          text = data.type == 'product'
+          ? 'Товары убраны из корзины'
+          : 'Услуги убраны из корзины'
+          icon = 'mdi-cart-remove'
+          break
+        default: return
+      }
+      this.notify(text, icon)
+      this.$emit('cartEndUpdate')
     }
   },
 
@@ -220,11 +243,12 @@ export default {
       formVariant: true,
       isLoginValid: true,
       isRegisterValid: true,
-      //snackbar
+      //notification
       feedback: false,
       feedbackIcon: '',
       feedbackText: '',
       feedbackColor: '',
+      feedbackTimeout: 0,
     }
   },
 
@@ -239,11 +263,12 @@ export default {
       this.repeat = ''
     },
 
-    notify(text, icon = 'mdi-information-outline', color = 'info') {
-      this.feedback = false
+    notify(text, icon='mdi-information-outline', color='info') {
+      this.feedbackTimeout = 0
       this.feedbackText = text
       this.feedbackIcon = icon
       this.feedbackColor = color
+      this.feedbackTimeout = 4000
       this.feedback = true
     },
 

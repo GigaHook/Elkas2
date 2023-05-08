@@ -1,6 +1,10 @@
 <template>
 	<Head title="Корзина"/>
-	<MainLayout :user="user">
+	<MainLayout
+		:user="user"
+		:cartUpdate="cartUpdate"
+		@cartEndUpdate="cartUpdate = null"
+	>
 		<v-slide-y-transition group leave-absolute>
 
 			<CartBar
@@ -11,8 +15,8 @@
 				@clear="cartClearItems"
 			/>
 		
-			<v-row v-if="products.length > 0">
-				<v-slide-y-transition group leave-absolute>
+			<v-row>
+				<v-slide-y-transition group leave-absolute v-if="products.length > 0">
 					<CartItem
 						v-for="product in products"
 						:key="product.id"
@@ -77,6 +81,7 @@ export default {
 			services: [],
 			productsPriceVariant: true,
 			servicesPriceVariant: true,
+			cartUpdate: null,
 		}
 	},
 
@@ -86,29 +91,39 @@ export default {
 	},
 
 	methods: {	
-		defineType(type) { //GET PRODUCTS/SERVICES
+		get(type) { //GET PRODUCTS/SERVICES
 			return type == 'product' ? this.products : this.services
 		},
 
 		cartAddItem(id, type) { //ADD
 			router.post(`/cart/${type}`, { id: id, }, { preserveState: true, preserveScroll: true })
-			this.defineType(type).find(elem => elem.id == id).count++
+			this.get(type).find(elem => elem.id == id).count++
 		},
 
 		cartRemoveItem(id, type) { //REMOVE
-			if (this.defineType(type).find(elem => elem.id == id).count == 1) return this.cartDeleteItem(id, type) 
+			if (this.get(type).find(elem => elem.id == id).count == 1) return this.cartDeleteItem(id, type) 
 			router.patch(`/cart/${type}/${id}`, { preserveState: true, preserveScroll: true })
-			this.defineType(type).find(elem => elem.id == id).count--
+			this.get(type).find(elem => elem.id == id).count--
 		},
 
 		cartDeleteItem(id, type) { //DELETE
 			router.delete(`/cart/${type}/${id}`, { preserveState: true, preserveScroll: true, })
-			this.defineType(type).splice(this.defineType(type).findIndex(elem => elem.id == id), 1)
+			this.sendCartUpdate('delete', type, this.get(type).find(elem => elem.id == id))
+			this.get(type).splice(this.get(type).findIndex(elem => elem.id == id), 1)
 		},
 
 		cartClearItems(type) { //CLEAR
 			router.delete(`cart/${type}`)
-			this.defineType(type).splice(0, this.defineType(type).length)
+			this.sendCartUpdate('clear', type)
+			this.get(type).splice(0, this.get(type).length)
+		},
+
+		sendCartUpdate(action, type, item=null) {
+			this.cartUpdate = {
+				action: action,
+				type: type,
+				item: item,
+			} 
 		},
 
 	}

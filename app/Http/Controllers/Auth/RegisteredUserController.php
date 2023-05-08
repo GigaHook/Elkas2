@@ -49,11 +49,5 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         Auth::login($user);
         return redirect()->back();
-        //return Inertia::render($request->page, [
-        //    'page' => $request->page,
-        //    'user' => Auth::user(),
-        //    'product' => $request->product,
-        //    'service' => $request->service,
-        //]);
     }
 }

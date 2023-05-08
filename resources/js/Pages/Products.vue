@@ -1,6 +1,10 @@
 <template>
 	<Head title="Каталог"/>
-	<MainLayout :user="user">
+	<MainLayout 
+		:user="user"
+		:cartUpdate="cartUpdate"
+		@cartEndUpdate="cartUpdate = null"
+	>
 		<v-row>
 			<template v-for="product in $page.props.products" :key="product.id">
 				<v-col xl="3" md="4" sm="6" v-if="product.available == true">
@@ -17,7 +21,7 @@
 							<div class="text-h6">${{ product.price }}</div>
 							<v-divider class="mb-3"/>
 							<Button 
-                @click.stop="addToCart(product.id)"
+                @click.stop="cartAddItem(product)"
                 class="w-100 buy-btn" 
                 :disabled="!user"
               >
@@ -31,23 +35,31 @@
 	</MainLayout>
 </template>
 
+<script>
+export default {
+	data() {
+		return {
+			cartUpdate: null,
+		}
+	},
+
+	methods: {
+		cartAddItem(product) {
+  	  router.post('/cart/product', { id: product.id, }, { preserveState: true, preserveScroll: true })
+  	  this.cartUpdate = { action: 'add', type: 'product', item: product } 
+  	},
+	},
+}
+</script>
+
 <script setup>
-import { Link, Head, router } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import Button from '../Components/Button.vue'
 
 defineProps({
   user: Object,
 })
-
-const addToCart = id => router.post('/cart/product', {
-	id: id,
-	action: 'add'
-}, {
-	preserveState: true,
-	preserveScroll: true,
-})
-
 
 </script>
 

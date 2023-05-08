@@ -1,32 +1,32 @@
 <template>
-    <v-row>
-			<v-col cols="12">
-        <v-toolbar
-          elevation="3"
-					color="#f9f7f7"
-          rounded
-         >
-          <v-toolbar-title>
-            <div class="d-flex">
-              <div class="text-h5 my-auto">{{ title }}</div>
-              <v-divider class="mx-4 my-1" vertical/>
-              <div>
-                <div>Всего предметов: <b>{{ totalItems() }}</b></div>
-                <div>На общую стоимость: <b>{{ totalPrice() }}</b></div>
-              </div>
+  <v-row>
+		<v-col cols="12">
+      <v-toolbar
+        elevation="3"
+				color="#f9f7f7"
+        rounded
+       >
+        <v-toolbar-title>
+          <div class="d-flex">
+            <div class="text-h5 my-auto">{{ title }}</div>
+            <v-divider class="mx-4 my-1" vertical/>
+            <div>
+              <div>Всего: <b>{{ totalItems() }}</b></div>
+              <div>На общую стоимость: <b>{{ totalPrice() }}</b></div>
             </div>
-          </v-toolbar-title>
-          <v-toolbar-items>
-            <v-btn @click="changePriceVariant">
-              <v-icon :icon="priceVariant ? 'mdi-tag-multiple' : 'mdi-tag-multiple-outline'" size="30"/>
-            </v-btn>
-            <v-btn @click="$emit('clear', type)" color="error">
-              <v-icon icon="mdi-delete-forever-outline" size="30"/>
-            </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-			</v-col>
-		</v-row>
+          </div>
+        </v-toolbar-title>
+        <v-toolbar-items>
+          <v-btn @click="changePriceVariant">
+            <v-icon :icon="priceVariant ? 'mdi-tag-multiple' : 'mdi-tag-multiple-outline'" size="30"/>
+          </v-btn>
+          <v-btn @click="$emit('clear', type)">
+            <v-icon icon="mdi-delete-forever-outline" size="30"/>
+          </v-btn>
+        </v-toolbar-items>
+      </v-toolbar>
+		</v-col>
+	</v-row>
 </template>
 
 <script setup>

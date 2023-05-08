@@ -30,12 +30,6 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
         return redirect()->back();
-        //return Inertia::render($request->page, [
-        //    'page' => $request->page,
-        //    'user' => Auth::user(),
-        //    'product' => $request->product,
-        //    'service' => $request->service,
-        //]);
     }
 
     /**
@@ -46,11 +40,5 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->back();
-        //return Inertia::render($request->page, [
-        //    'page' => $request->page,
-        //    'user' => Auth::user(),
-        //    'product' => $request->product,
-        //    'service' => $request->service,
-        //]);
     }
 }
