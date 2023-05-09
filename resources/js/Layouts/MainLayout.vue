@@ -1,21 +1,27 @@
 <template>
   <v-app>
 
-    <v-container style="height: 44px;">
-      <v-app-bar class="justify-center" color="#DBE2EF" style="height: 44px;" elevation="3">
-        <Link class="nav-item" href="/"><v-btn class="rounded-0 nav-item">Главная</v-btn></Link>
-        <Link class="nav-item" href="/products"><v-btn class="rounded-0 nav-item">Каталог</v-btn></Link>
-        <Link class="nav-item" href="/services"><v-btn class="rounded-0 nav-item">Услуги</v-btn></Link>
-        <Link class="nav-item"><v-btn class="rounded-0 nav-item">О нас</v-btn></Link>
-        <Link class="nav-item me-auto"><v-btn class="rounded-0 nav-item">Контакты</v-btn></Link>
+    <v-container style="height: 44px; background-color: #DBE2EF;" class="w-100">
+      <v-app-bar class="d-flex align-center" color="#DBE2EF" style="max-height:48px;" density="compact" elevation="3">
+        <v-row class="justify-center">
+          <v-col lg="11" xl="10" class="ps-6 pe-5 d-flex">
+            <img src="storage/assets/logo.png" style="height:48px; max-width: 290px;">
 
-        <Link v-if="!!user" class="nav-item cart-btn" href="/cart">
-          <v-btn class="rounded-0 nav-item cart-btn"><v-icon icon="mdi-cart-outline" size="30"/></v-btn>
-        </Link>
-        <span v-else class="cart-btn">
-          <v-btn class="rounded-0 nav-item cart-btn" disabled><v-icon icon="mdi-cart-outline" size="30"/></v-btn>
-        </span>
+            <Link href="/"><v-btn class="rounded-0 nav-item">Главная</v-btn></Link>
+            <Link href="/products"><v-btn class="rounded-0 nav-item">Каталог</v-btn></Link>
+            <Link href="/services"><v-btn class="rounded-0 nav-item">Услуги</v-btn></Link>
+            <Link><v-btn class="rounded-0 nav-item">О нас</v-btn></Link>
+            <Link><v-btn class="rounded-0 nav-item">Контакты</v-btn></Link>
 
+            <Link v-if="!!user" href="/cart" class="ms-auto">
+              <v-btn class="rounded-0 cart-btn" icon="mdi-cart-outline" style="height:100%; width:48px" size="x-large"/>
+            </Link>
+          
+            <span v-else class="ms-auto">
+              <v-btn class="rounded-0 cart-btn" icon="mdi-cart-outline" style="height:100%; width:48px" size="x-large" :disabled="!user"/>
+            </span>
+          </v-col>
+        </v-row>
       </v-app-bar>
     </v-container>
 
@@ -330,7 +336,7 @@ import Button from '../Components/Button.vue'
 </script>
 
 <style scoped>
-.nav-item:hover {
+.nav-item:hover, .cart-btn:hover {
   background-color: #3F72AF;
   color: #DBE2EF;
 }
@@ -343,6 +349,7 @@ import Button from '../Components/Button.vue'
   transition: all .1s ease-in-out;
 }
 .cart-btn {
-  width: fit-content;
+  color: #112D4E;
+  transition: all .1s ease-in-out;
 }
 </style>

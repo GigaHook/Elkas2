@@ -29,7 +29,7 @@ const vuetify = createVuetify({ components, directives, icons});
 
 //other stuff
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+const appName = 'Elkas'//window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
