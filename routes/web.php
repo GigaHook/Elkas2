@@ -38,6 +38,11 @@ Route::controller(ProductController::class)->prefix('products')->group(function(
     Route::get('/{id}', 'show');
 });
 
+Route::controller(ServiceController::class)->prefix('services')->group(function() {
+    Route::get('/', 'index');
+    Route::get('/{id}', 'show');
+});
+
 Route::prefix('cart')->group(function() {
     Route::get('/', function() {
         return Inertia::render('Cart', [
@@ -62,11 +67,17 @@ Route::prefix('cart')->group(function() {
     });
 });
 
-Route::controller(ServiceController::class)->prefix('services')->group(function() {
-    Route::get('/', 'index');
-    Route::get('/{id}', 'show');
+Route::get('/contacts', function() {
+    return Inertia::render('Contacts', [
+        'user' => Auth::user(),
+    ]);
 });
 
+Route::get('/about', function() {
+    return Inertia::render('About', [
+        'user' => Auth::user(),
+    ]);
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

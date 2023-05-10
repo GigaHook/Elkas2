@@ -2,6 +2,26 @@
 	<Head title="Главная"/>
 	<MainLayout :user="user">
 		<v-card class="pa-3" elevation="3" color="#f9f7f7">
+			<v-carousel
+			cycle
+			hide-delimiters
+			show-arrows="hover"
+			>
+			<v-carousel-item
+			    src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+			    cover
+			  />
+				
+			  <v-carousel-item
+				src="https://cdn.vuetifyjs.com/images/cards/hotel.jpg"
+			    cover
+			  />
+						
+			  <v-carousel-item
+				src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+				cover
+			  />
+			</v-carousel>
 			<v-img src="storage/assets/main.png" height="200px" class=""/>
 			<div class="text-center text-h5 mt-4">
 				Надежные кассы для успешного бизнеса
@@ -9,26 +29,6 @@
 			<div class="text-center text-h6 mb-4">
 				Продажа и ремонт кассовой техники
 			</div>
-			<v-carousel
-				cycle
-				hide-delimiters
-				show-arrows="hover"
-			>
-			  <v-carousel-item
-			    src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-			    cover
-			  />
-						
-			  <v-carousel-item
-			    src="https://cdn.vuetifyjs.com/images/cards/hotel.jpg"
-			    cover
-			  />
-						
-			  <v-carousel-item
-			    src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-			    cover
-			  />
-			</v-carousel>
 		</v-card>
 	</MainLayout>
 </template>

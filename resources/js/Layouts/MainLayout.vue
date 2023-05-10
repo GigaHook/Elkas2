@@ -7,14 +7,14 @@
           <v-col lg="11" xl="10" class="ps-6 pe-5 d-flex">
             <img src="storage/assets/logo.png" style="height:48px; max-width: 290px;">
 
-            <Link href="/"><v-btn class="rounded-0 nav-item">Главная</v-btn></Link>
-            <Link href="/products"><v-btn class="rounded-0 nav-item">Каталог</v-btn></Link>
-            <Link href="/services"><v-btn class="rounded-0 nav-item">Услуги</v-btn></Link>
-            <Link><v-btn class="rounded-0 nav-item">О нас</v-btn></Link>
-            <Link><v-btn class="rounded-0 nav-item">Контакты</v-btn></Link>
+            <NavItem route="/">Главная</NavItem>
+            <NavItem route="/products">Каталог</NavItem>
+            <NavItem route="/services">Услуги</NavItem>
+            <NavItem route="/contacts">Контакты</NavItem>
+            <NavItem route="/about">О нас</NavItem>
 
             <Link v-if="!!user" href="/cart" class="ms-auto">
-              <v-btn class="rounded-0 cart-btn" icon="mdi-cart-outline" style="height:100%; width:48px" size="x-large"/>
+              <v-btn class="rounded-0 cart-btn" :class="{ 'acvite': $page.url === '/cart' }" icon="mdi-cart-outline" style="height:100%; width:48px" size="x-large"/>
             </Link>
           
             <span v-else class="ms-auto">
@@ -35,7 +35,6 @@
         <v-scroll-x-transition leave-absolute>
           <!--auth-->
           <v-card v-if="!!user" class="pa-3" color="#f9f7f7" elevation="3">
-            <span>Статус: <b>Авторизованный пользователь</b></span>
             <div class="d-flex flex-column">
               <v-icon icon="mdi-account-check-outline" size="100" class="align-self-center"/>
               <div class="text-h6 align-self-center mb-2">
@@ -46,7 +45,6 @@
           </v-card>
           <!--guest-->
           <v-card v-else-if="formVariant" class="pa-3" color="#f9f7f7" elevation="3">
-            <span>Статус: <b>Гость</b></span>
             <v-form @submit.prevent="loginSubmit" v-model="isLoginValid" validate-on="blur" class="text-center">
               <v-icon icon="mdi-account-remove-outline" style="transform: scaleX(-1);" size="100"/> <!--mirror magic-->
               <div class="text-h6 mb-3">Войдите в аккаунт</div>
@@ -332,24 +330,17 @@ export default {
 <script setup>
 import { Link, Head, router } from '@inertiajs/vue3'
 import Button from '../Components/Button.vue'
+import NavItem from '../Components/NavItem.vue'
 
 </script>
 
 <style scoped>
-.nav-item:hover, .cart-btn:hover {
-  background-color: #3F72AF;
-  color: #DBE2EF;
-}
-
-.nav-item {
-  color: #112D4E;
-  font-weight: 600;
-  width: 100px;
-  height: 100%;
-  transition: all .1s ease-in-out;
-}
 .cart-btn {
   color: #112D4E;
   transition: all .1s ease-in-out;
+}
+.cart-btn:hover{
+  background-color: #3F72AF;
+  color: #DBE2EF;
 }
 </style>
