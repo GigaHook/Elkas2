@@ -3,7 +3,6 @@
     <v-btn
       class="rounded-0 nav-item" 
       :class="{ 'active': $page.url === route }" 
-      :elevation="$page.url === route ? 7 : 0"
     >
       <slot/>
     </v-btn>
@@ -34,6 +33,7 @@ defineProps({
 .active, .active:hover{
   background-color: #F38307;
   color: white;
+  box-shadow: 0px 0px 20px 3px rgba(243, 131, 7, .6);;
   z-index: 2;
 }
 </style>

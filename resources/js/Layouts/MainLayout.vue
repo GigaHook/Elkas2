@@ -5,7 +5,7 @@
       <v-app-bar class="d-flex align-center" color="#DBE2EF" style="max-height:48px;" density="compact" elevation="3">
         <v-row class="justify-center">
           <v-col lg="11" xl="10" class="ps-6 pe-5 d-flex">
-            <img src="storage/assets/logo.png" style="height:48px; max-width: 290px;">
+            <img src="storage/assets/logo_variant_3.png" style="height:48px; max-width: 290px;" class="pe-2">
 
             <NavItem route="/">Главная</NavItem>
             <NavItem route="/products">Каталог</NavItem>
@@ -14,20 +14,32 @@
             <NavItem route="/about">О нас</NavItem>
 
             <Link v-if="!!user" href="/cart" class="ms-auto">
-              <v-btn class="rounded-0 cart-btn" :class="{ 'acvite': $page.url === '/cart' }" icon="mdi-cart-outline" style="height:100%; width:48px" size="x-large"/>
+              <v-btn
+                class="rounded-0 cart-btn" 
+                :class="{ 'acvite': $page.url === '/cart' }" 
+                icon="mdi-cart-outline" 
+                style="height:100%; width:48px" 
+                size="x-large"
+              />
             </Link>
           
             <span v-else class="ms-auto">
-              <v-btn class="rounded-0 cart-btn" icon="mdi-cart-outline" style="height:100%; width:48px" size="x-large" :disabled="!user"/>
+              <v-btn 
+                class="rounded-0 cart-btn" 
+                icon="mdi-cart-outline" 
+                style="height:100%; width:48px" 
+                size="x-large" 
+                disabled
+              />
             </span>
           </v-col>
         </v-row>
       </v-app-bar>
     </v-container>
 
-    <v-row class="justify-center mt-3 mx-md-1 mx-lg-0">
+    <v-row class="justify-center mt-3 mx-md-1 mx-xl-0">
       <!--content-->
-      <v-col lg="8" md="9" sm="12">
+      <v-col lg="9" md="9" sm="12">
         <slot/>
       </v-col>
       <!--side-->

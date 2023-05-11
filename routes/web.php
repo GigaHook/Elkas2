@@ -5,8 +5,6 @@ use App\Http\Controllers\CartProductController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CartServiceController;
 use App\Http\Controllers\ProfileController;
-use App\Models\CartProduct;
-use App\Models\CartService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,10 +20,6 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-
-
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -43,12 +37,25 @@ Route::controller(ServiceController::class)->prefix('services')->group(function(
     Route::get('/{id}', 'show');
 });
 
-Route::prefix('cart')->group(function() {
+Route::get('/contacts', function() {
+    return Inertia::render('Contacts', [
+        'user' => Auth::user(),
+    ]);
+});
+
+Route::get('/about', function() {
+    return Inertia::render('About', [
+        'user' => Auth::user(),
+    ]);
+});
+
+
+Route::prefix('cart')->middleware('auth')->group(function() {
     Route::get('/', function() {
         return Inertia::render('Cart', [
             'user' => Auth::user(),
         ]);
-    })->middleware(['auth', 'verified']);
+    });
 
     Route::prefix('product')->controller(CartProductController::class)->group(function() {
         Route::get('/', 'index');
@@ -65,18 +72,6 @@ Route::prefix('cart')->group(function() {
         Route::delete('/{id}', 'delete');
         Route::delete('/', 'clear');
     });
-});
-
-Route::get('/contacts', function() {
-    return Inertia::render('Contacts', [
-        'user' => Auth::user(),
-    ]);
-});
-
-Route::get('/about', function() {
-    return Inertia::render('About', [
-        'user' => Auth::user(),
-    ]);
 });
 
 Route::get('/dashboard', function () {
