@@ -16,6 +16,6 @@ class AdminGuard
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return Auth::user()->admin ? $next($request) : redirect('home');
+        return Auth::user()->admin ? $next($request) : redirect()->route('home');
     }
 }

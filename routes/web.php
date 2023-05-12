@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartProductController;
 use App\Http\Controllers\ServiceController;
@@ -49,7 +50,6 @@ Route::get('/about', function() {
     ]);
 });
 
-
 Route::prefix('cart')->middleware('auth')->group(function() {
     Route::get('/', function() {
         return Inertia::render('Cart', [
@@ -72,6 +72,13 @@ Route::prefix('cart')->middleware('auth')->group(function() {
         Route::delete('/{id}', 'delete');
         Route::delete('/', 'clear');
     });
+});
+
+Route::prefix('orders')->controller(OrderController::class)->middleware('auth')->group(function() {
+    Route::get('/', 'index')->middleware('admin');
+    Route::get('/{userId}', 'show');
+    Route::post('/', 'store');
+    Route::patch('/{id}', 'update');
 });
 
 Route::get('/dashboard', function () {
