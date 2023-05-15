@@ -54,13 +54,14 @@
 					/>
 				</v-slide-y-transition>
 			</v-row>
-
+			
 		</v-slide-y-transition>
+
 	</MainLayout>
 </template>
 
 <script setup>
-import { Link, Head, router } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import Button from '../Components/Button.vue'
 import CartBar from '../Components/CartBar.vue'
