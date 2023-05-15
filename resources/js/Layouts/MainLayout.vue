@@ -183,8 +183,8 @@
         </v-scroll-x-transition>
         <!--cart data-->
         <v-card v-if="$page.url === '/cart'" class="pa-3 mt-6" color="#f9f7f7" elevation="3">
-          Всего товаров в корзине:
-          {{  }}
+          Всего товаров в корзине: TODO
+          <Button @click="makeOrder">Оформить заказ</Button>
         </v-card>
       </v-col>
     </v-row>
@@ -275,7 +275,7 @@ export default {
 
   computed: {
     cartTotal() {
-      
+      return ''
     }
   },
 
@@ -344,6 +344,16 @@ export default {
       })
     },
 
+    makeOrder() {
+      router.post(route('order.make'), {
+        products: this.$page.props.cart.products,
+        services: this.$page.props.cart.services,
+      }, {
+        preserveScroll: true,
+        preserveState: true,
+      })
+    }
+
   }
 
 
@@ -369,7 +379,7 @@ import NavItem from '../Components/NavItem.vue'
 .active, .active:hover{
   background-color: #F38307;
   color: white;
-  box-shadow: 0px 0px 20px 3px rgba(243, 131, 7, .6);;
+  box-shadow: 0px 0px 20px 3px rgba(243, 131, 7, .6);
   z-index: 2;
 }
 </style>

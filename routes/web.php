@@ -77,8 +77,9 @@ Route::prefix('cart')->middleware('auth')->group(function() {
 Route::prefix('orders')->controller(OrderController::class)->middleware('auth')->group(function() {
     Route::get('/', 'index')->middleware('admin');
     Route::get('/{userId}', 'show');
-    Route::post('/', 'store');
+    Route::post('/', 'store')->name('order.make');
     Route::patch('/{id}', 'update');
+    Route::delete('/{id}', 'delete');
 });
 
 /*
