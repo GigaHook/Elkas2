@@ -19,6 +19,13 @@ class OrderController extends Controller
         ]);
     }
 
+    public function show(Int $userId): InertiaResponse {
+        return Inertia::render('Orders', [
+            'user' => Auth::user(),
+            'orders' => Order::where('user_id', $userId)->get(),
+        ]);
+    }
+
     /**
      * Делает пустой ордер
      * для каждого предмета из корзины делает предмет ордера

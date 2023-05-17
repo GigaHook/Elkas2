@@ -5,13 +5,14 @@
       <v-app-bar class="d-flex align-center" color="#DBE2EF" style="max-height:48px;" density="compact" elevation="3">
         <v-row class="justify-center">
           <v-col lg="12" xl="11" class="ps-6 pe-5 d-flex">
-            <img src="storage/assets/logo_variant_3.png" style="height:48px; max-width: 290px;" class="pe-2">
+            <img :src="'../storage/assets/logo_variant_3.png'" style="height:48px; max-width: 290px;" class="pe-2">
 
             <NavItem route="/">Главная</NavItem>
             <NavItem route="/products">Каталог</NavItem>
             <NavItem route="/services">Услуги</NavItem>
             <NavItem route="/contacts">Контакты</NavItem>
             <NavItem route="/about">О нас</NavItem>
+            <NavItem :route="`/orders/${user?.id}`">Заказы</NavItem>
 
             <Link v-if="!!user" href="/cart" class="ms-auto">
               <v-btn
