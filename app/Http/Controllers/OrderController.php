@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\OrderProductController;
+use App\Http\Controllers\OrderServiceController;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\OrderService;
@@ -16,6 +18,8 @@ class OrderController extends Controller
         return Inertia::render('Orders', [
             'user' => Auth::user(),
             'orders' => Order::all(),
+            'orderProducts' => OrderProduct::all(),
+            'orderServices' => OrderService::all(),
         ]);
     }
 
@@ -23,6 +27,8 @@ class OrderController extends Controller
         return Inertia::render('Orders', [
             'user' => Auth::user(),
             'orders' => Order::where('user_id', $userId)->get(),
+            'orderProducts' => OrderProductController::index(),
+            //'orderServices' => OrderServiceController::index(),
         ]);
     }
 

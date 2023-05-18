@@ -19,7 +19,7 @@
 				<v-divider class="mb-3"/>
 				<v-toolbar density="compact" color="#f9f7f7" rounded>
 					<span class="text-subtitle me-auto px-auto ps-1">Кол-во: {{ item.count }}</span>
-					<v-toolbar-items><!--TODO: Смена цены за всё и за 1 шт-->
+					<v-toolbar-items>
 						<v-btn @click.stop="$emit('add', item.id, type)" icon="mdi-plus" />
 						<v-btn @click.stop="$emit('remove', item.id, type)" icon="mdi-minus" />
 						<v-btn @click.stop="$emit('delete', item.id, type)" icon="mdi-trash-can-outline"/>
