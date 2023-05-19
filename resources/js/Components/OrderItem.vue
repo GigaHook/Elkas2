@@ -1,21 +1,32 @@
 <template>
-	<v-col xl="3" md="4" sm="6">
-		<v-hover v-slot="{ isHovering, props }">
-			<v-card
-				:elevation="isHovering ? 10 : 3"
-				v-bind="props" 
-				@click="router.get(`/${type}s/${item.id}`)"
-				class="text-center px-3 pt-1 pb-3 card" 
-				variant="plain"
-			>
-				<div class="text-h6">{{ item.name }}</div>
-				<v-sheet class="my-1 w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
-				<div class="my-3 text-h6">
-					${{ item.count * item.price }}, ${{ item.price }} x {{ item.count }}
-				</div>
-			</v-card>
-		</v-hover>
-	</v-col>
+	<v-hover v-slot="{ isHovering, props }">
+		<v-card
+			:elevation="isHovering ? 10 : 3"
+			v-bind="props" 
+			@click="router.get(`/${type}s/${item.id}`)"
+			class="pa-3 my-3 card" 
+			variant="plain"
+		>
+			<v-row>
+				<v-col cols="2">
+					<v-sheet class="w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
+				</v-col>
+	
+				<v-col cols="8">
+					<h3>{{ item.name }}</h3>
+					{{ item.description }}
+				</v-col>
+	
+				<v-col cols="2" class="text-h6 text-end">
+					<span class="text-h5">
+						${{ item.price * item.count }}
+					</span><br>
+					${{ item.price }} х {{ item.count }}
+				</v-col>
+	
+			</v-row>
+		</v-card>
+	</v-hover>
 </template>
 
 <script>
@@ -42,4 +53,5 @@ import { router } from '@inertiajs/vue3';
 	background-color: #f9f7f7;
 	opacity: 1;
 }
+
 </style>

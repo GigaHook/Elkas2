@@ -24,11 +24,17 @@ class OrderController extends Controller
     }
 
     public function show(Int $userId): InertiaResponse {
+        $orders = [];
+        $rawOrders = Order::where('user_id', $userId)->get();
+        foreach ($rawOrders as $rawOrder) {
+            $rawOrder->expanded = [$rawOrder->status == 'В работе' ? $rawOrder->id : null]; //forbidden vue trick
+            $orders[] = $rawOrder;
+        }
         return Inertia::render('Orders', [
             'user' => Auth::user(),
-            'orders' => Order::where('user_id', $userId)->get(),
+            'orders' => $orders,
             'orderProducts' => OrderProductController::index(),
-            //'orderServices' => OrderServiceController::index(),
+            'orderServices' => OrderServiceController::index(),
         ]);
     }
 
