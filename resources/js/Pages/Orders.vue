@@ -3,7 +3,7 @@
 	<MainLayout :user="user">
 
 		<v-expansion-panels 
-			v-for="order in orders" 
+			v-for="order in reverserOrders" 
 			:key="order.id"
 			v-model="order.expanded"
 			class="mb-3"
@@ -15,24 +15,50 @@
 				:value="order.id"
 			>
 				<v-expansion-panel-title color="#f9f7f7" class="order-title">
-					Заказ №<span class="ms-1 order-number text-weight-thin">
+					Заказ №
+					<span class="ms-1 order-number text-weight-thin">
 						{{ formatOrderId(order.id) }}
 					</span>
-					
+					<v-chip v-if="order.status == 'В работе'" color="info" variant="elevated" class="text-h6 ms-2">
+						{{ order.status }}
+					</v-chip>
+					<v-chip v-else-if="order.status == 'Завершён'" color="success" variant="elevated" class="text-h6 ms-2">
+						{{ order.status }}
+					</v-chip>
+					<v-chip v-else="order.status == 'Отменён'" variant="elevated" class="text-h6 ms-2">
+						{{ order.status }}
+					</v-chip>
 				</v-expansion-panel-title>
 				
 				<v-expansion-panel-text
 					style="background-color: #f9f7f7"
 					class="rounded"
 				>
-					<h2>Продукты</h2>
+					<v-row class="text-h6">
+						<v-col cols="4">
+							Всего предметов: {{ countOrderProducts(order.id) + countOrderServices(order.id) }}<br>
+							Итого: ${{ order.price }}
+						</v-col>
+						<v-col cols="4">
+							Товаров: {{ countOrderProducts(order.id) }}<br>
+							На стоимость: ${{ totalOrderProducts(order.id) }}
+						</v-col>
+						<v-col cols="4">
+							Услуг: {{ countOrderServices(order.id) }}<br>
+							На стоимость: ${{ totalOrderServices(order.id) }}
+						</v-col>
+					</v-row>
+
+					<h2>Товары</h2>
 					<OrderItem 
 						v-for="orderProduct in getOrderProducts(order.id)"
 						:key="orderProduct.id"
 						:item="orderProduct"
 						type="product"
 					/>
+
 					<v-divider class="mt-7 mb-4"/>
+
 					<h2>Услуги</h2>
 					<OrderItem 
 						v-for="orderService in getOrderServices(order.id)"
@@ -40,6 +66,7 @@
 						:item="orderService"
 						type="service"
 					/>
+
 				</v-expansion-panel-text>
 			</v-expansion-panel>
 		</v-expansion-panels>
@@ -51,7 +78,7 @@
 export default {
 	data(){
 		return {
-
+			reversedOrders: [],
 		}
 	},
 
@@ -97,11 +124,36 @@ export default {
 					break;
 			}
 			return result
-		}
+		},
+
+		countOrderProducts(id) {
+			let count = 0
+			this.getOrderProducts(id).forEach(elem => count += elem.count)
+			return count
+		},
+
+		countOrderServices(id) {
+			let count = 0
+			this.getOrderServices(id).forEach(elem => count += elem.count)
+			return count
+		},
+
+		totalOrderProducts(id) {
+			let total = 0
+			this.getOrderProducts(id).forEach(elem => total += elem.count * elem.price)
+			return total			
+		},
+
+		totalOrderServices(id) {
+			let total = 0
+			this.getOrderServices(id).forEach(elem => total += elem.count * elem.price)
+			return total
+		},
+
 	},
 
 	mounted() {
-
+		this.reverserOrders = this.orders.reverse()
 	},
 
 }
@@ -135,4 +187,5 @@ defineProps({
 .order-title{
 	font-size: 24px
 }
+
 </style>

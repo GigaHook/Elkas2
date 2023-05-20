@@ -27,7 +27,7 @@ class OrderController extends Controller
         $orders = [];
         $rawOrders = Order::where('user_id', $userId)->get();
         foreach ($rawOrders as $rawOrder) {
-            $rawOrder->expanded = [$rawOrder->status == 'В работе' ? $rawOrder->id : null]; //forbidden vue trick
+            $rawOrder->expanded = [$rawOrder->status == 'В работе' ? $rawOrder->id : null];
             $orders[] = $rawOrder;
         }
         return Inertia::render('Orders', [

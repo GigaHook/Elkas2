@@ -12,7 +12,7 @@
             <NavItem route="/services">Услуги</NavItem>
             <NavItem route="/contacts">Контакты</NavItem>
             <NavItem route="/about">О нас</NavItem>
-            <NavItem :route="`/orders/${user?.id}`">Заказы</NavItem>
+            <NavItem :route="user?.admin ? '/orders/' : `/orders/${user?.id}`">Заказы</NavItem>
 
             <Link v-if="!!user" href="/cart" class="ms-auto">
               <v-btn
@@ -214,6 +214,10 @@ export default {
   props: {
     user: Object,
     cartUpdate: Object,
+    cartData: {
+      type: Object,
+      default: null,
+    }
   },
 
   watch: {

@@ -8,6 +8,7 @@
 			variant="plain"
 		>
 			<v-row>
+
 				<v-col cols="2">
 					<v-sheet class="w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
 				</v-col>
@@ -18,9 +19,7 @@
 				</v-col>
 	
 				<v-col cols="2" class="text-h6 text-end">
-					<span class="text-h5">
-						${{ item.price * item.count }}
-					</span><br>
+					<span class="text-h5">${{ item.price * item.count }}</span><br>
 					${{ item.price }} х {{ item.count }}
 				</v-col>
 	
@@ -41,6 +40,10 @@ export default {
 			
     }
   },
+
+	methods: {
+		
+	},
 }
 </script>
 
