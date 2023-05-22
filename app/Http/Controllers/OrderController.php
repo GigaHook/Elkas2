@@ -12,27 +12,33 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
+/**
+ * Summary of OrderController
+ */
 class OrderController extends Controller
 {
+    /**
+     * Для пользователя: Представление всех его ордеров с товарами и услугами всех ордеров
+     * Для админа: ВСе ордера, их заказы и услуги
+     * @return InertiaResponse
+     */
     public function index(): InertiaResponse {
-        return Inertia::render('Orders', [
+        if (Auth::user()->admin) return Inertia::render('Orders', [
             'user' => Auth::user(),
             'orders' => Order::all(),
             'orderProducts' => OrderProduct::all(),
             'orderServices' => OrderService::all(),
         ]);
-    }
-
-    public function show(Int $userId): InertiaResponse {
-        $orders = [];
-        $rawOrders = Order::where('user_id', $userId)->get();
-        foreach ($rawOrders as $rawOrder) {
-            $rawOrder->expanded = [$rawOrder->status == 'В работе' ? $rawOrder->id : null];
-            $orders[] = $rawOrder;
-        }
-        return Inertia::render('Orders', [
+        else return Inertia::render('Orders', [
             'user' => Auth::user(),
-            'orders' => $orders,
+            'orders' => function() {
+                $orders = [];
+                foreach (Order::where('user_id', Auth::id())->get() as $order) {
+                    $order->expanded = [$order->status == 'В работе' ? $order->id : null];
+                    $orders[] = $order;
+                }
+                return $orders;
+            },
             'orderProducts' => OrderProductController::index(),
             'orderServices' => OrderServiceController::index(),
         ]);
@@ -71,6 +77,12 @@ class OrderController extends Controller
             $price += $service->price * $service->count;
         }
         $order->price = $price;
+        $order->save();
+    }
+
+    public function patch(Request $request, Int $id): Void {
+        $order = Order::find($id);
+        $order->status = $request->status;
         $order->save();
     }
 }

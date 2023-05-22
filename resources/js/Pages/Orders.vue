@@ -25,7 +25,7 @@
 					<v-chip v-else-if="order.status == 'Завершён'" color="success" variant="elevated" class="text-h6 ms-2">
 						{{ order.status }}
 					</v-chip>
-					<v-chip v-else="order.status == 'Отменён'" variant="elevated" class="text-h6 ms-2">
+					<v-chip v-else variant="elevated" class="text-h6 ms-2">
 						{{ order.status }}
 					</v-chip>
 				</v-expansion-panel-title>
@@ -49,7 +49,12 @@
 						</v-col>
 					</v-row>
 
-					<h2>Товары</h2>
+					<div class="d-flex align-center">
+						<h2>Товары</h2>
+						<v-divider class="mt-1 ms-2"/>
+					</div>
+
+					
 					<OrderItem 
 						v-for="orderProduct in getOrderProducts(order.id)"
 						:key="orderProduct.id"
@@ -57,9 +62,11 @@
 						type="product"
 					/>
 
-					<v-divider class="mt-7 mb-4"/>
+					<div class="d-flex align-center">
+						<h2>Услуги</h2>
+						<v-divider class="mt-1 ms-2"/>
+					</div>
 
-					<h2>Услуги</h2>
 					<OrderItem 
 						v-for="orderService in getOrderServices(order.id)"
 						:key="orderService.id"

@@ -12,7 +12,7 @@
             <NavItem route="/services">Услуги</NavItem>
             <NavItem route="/contacts">Контакты</NavItem>
             <NavItem route="/about">О нас</NavItem>
-            <NavItem :route="user?.admin ? '/orders/' : `/orders/${user?.id}`">Заказы</NavItem>
+            <NavItem route="/orders" :disabled="!user">Заказы</NavItem>
 
             <Link v-if="!!user" href="/cart" class="ms-auto">
               <v-btn

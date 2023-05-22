@@ -1,8 +1,13 @@
 <template>
-  <Link :href="route">
+  <Link 
+    :href="route"
+    :as="disabled ? 'button' : 'a'"
+    :disabled="disabled"
+  >
     <v-btn
       class="rounded-0 nav-item" 
       :class="{ 'active': $page.url === route }" 
+      :disabled="disabled"
     >
       <slot/>
     </v-btn>
@@ -14,6 +19,10 @@ import { Link } from '@inertiajs/vue3'
 
 defineProps({
   route: String,
+  disabled: {
+    type: Boolean,
+    default: false,
+  }
 })
 
 </script>
