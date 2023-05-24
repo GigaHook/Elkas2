@@ -12,11 +12,18 @@ class OrderServiceController extends Controller
 {
     public static function index(): Array {
         $services = [];
+        if (!Auth::user()->admin)
         foreach (Order::where('user_id', Auth::id())->get() as $order) 
-        foreach (OrderService::where('order_id', $order->id)->get() as $orderservice) {
-            $service = Service::find($orderservice->service_id);
-            $service->count = $orderservice->count;
-            $service->order_id = $orderservice->order_id;
+        foreach (OrderService::where('order_id', $order->id)->get() as $orderService) {
+            $service = Service::find($orderService->service_id);
+            $service->count = $orderService->count;
+            $service->order_id = $orderService->order_id;
+            $services[] = $service;
+        }
+        else foreach (OrderService::all() as $orderService) {
+            $service = Service::find($orderService->service_id);
+            $service->count = $orderService->count;
+            $service->order_id = $orderService->order_id;
             $services[] = $service;
         }
         return $services;

@@ -3,7 +3,7 @@
 	<MainLayout :user="user">
 
 		<v-expansion-panels 
-			v-for="order in reverserOrders" 
+			v-for="order in reversedOrders" 
 			:key="order.id"
 			v-model="order.expanded"
 			class="mb-3"
@@ -19,15 +19,30 @@
 					<span class="ms-1 order-number text-weight-thin">
 						{{ formatOrderId(order.id) }}
 					</span>
-					<v-chip v-if="order.status == 'В работе'" color="info" variant="elevated" class="text-h6 ms-2">
-						{{ order.status }}
-					</v-chip>
-					<v-chip v-else-if="order.status == 'Завершён'" color="success" variant="elevated" class="text-h6 ms-2">
-						{{ order.status }}
-					</v-chip>
-					<v-chip v-else variant="elevated" class="text-h6 ms-2">
-						{{ order.status }}
-					</v-chip>
+
+					<template v-if="!user.admin"> 
+						<v-chip v-if="order.status == 'В работе'" color="info" variant="elevated" class="text-h6 ms-2">
+							{{ order.status }}
+						</v-chip>
+						<v-chip v-else-if="order.status == 'Завершён'" color="success" variant="elevated" class="text-h6 ms-2">
+							{{ order.status }}
+						</v-chip>
+						<v-chip v-else variant="elevated" class="text-h6 ms-2">
+							{{ order.status }}
+						</v-chip>
+					</template>
+
+					<v-select
+						v-else
+						:ref="'select' + order.id"
+					  chips
+					  label="Статус"
+						density="compact"
+					  :items="['В работе', 'Завершён', 'Отменён']"
+					  variant="solo"
+						@click.stop.prevent="event => selectClick(event)"
+					/>
+						
 				</v-expansion-panel-title>
 				
 				<v-expansion-panel-text
@@ -85,17 +100,23 @@
 export default {
 	data(){
 		return {
-			reversedOrders: [],
+			
+		}
+	},
+
+	computed: {
+		reversedOrders() {
+			return this.orders.reverse()
 		}
 	},
 
 	methods: {
-		getOrderProducts(orderId) {
-			return this.orderProducts.filter(elem => elem.order_id == orderId)
+		getOrderProducts(id) {
+			return this.orderProducts.filter(elem => elem.order_id == id)
 		},
 
-		getOrderServices(orderId) {
-			return this.orderServices.filter(elem => elem.order_id == orderId)
+		getOrderServices(id) {
+			return this.orderServices.filter(elem => elem.order_id == id)
 		},
 
 		formatOrderId(id) {
@@ -157,10 +178,15 @@ export default {
 			return total
 		},
 
+		selectClick(event) {
+			event.stopPropagation()
+			
+		},
+
 	},
 
 	mounted() {
-		this.reverserOrders = this.orders.reverse()
+
 	},
 
 }

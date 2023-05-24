@@ -26,8 +26,8 @@ class OrderController extends Controller
         if (Auth::user()->admin) return Inertia::render('Orders', [
             'user' => Auth::user(),
             'orders' => Order::all(),
-            'orderProducts' => OrderProduct::all(),
-            'orderServices' => OrderService::all(),
+            'orderProducts' => OrderProductController::index(),
+            'orderServices' => OrderServiceController::index(),
         ]);
         else return Inertia::render('Orders', [
             'user' => Auth::user(),
@@ -56,7 +56,7 @@ class OrderController extends Controller
         $order->user_id = Auth::id();
         $order->price = 0;
         $order->status = 'В работе';
-        $order->save(); //чтобы потом на его айди ссылаться
+        $order->save();
         $price = 0;
         foreach ($request->products as $product) {
             $product = (object)$product;
