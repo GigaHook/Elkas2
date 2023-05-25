@@ -72,14 +72,10 @@ class OrderController extends Controller
     }
 
     public function update(Request $request, Int $id): Void {
-        $order = Order::find($id);
-        $order->status = $request->status;
-        $order->save();
+        Order::find($id)->update(['status' => $request->status]);
     }
 
     public function cancel(Int $id): Void {
-        $order = Order::find($id);
-        $order->status = 'Отменён';
-        $order->save();
+        Order::find($id)->update(['status' => 'Отменён']);
     }
 }
