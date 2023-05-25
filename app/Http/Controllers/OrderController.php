@@ -7,6 +7,7 @@ use App\Http\Controllers\OrderServiceController;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\OrderService;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -23,24 +24,14 @@ class OrderController extends Controller
      * @return InertiaResponse
      */
     public function index(): InertiaResponse {
-        if (Auth::user()->admin) return Inertia::render('Orders', [
+        return Inertia::render('Orders', [
             'user' => Auth::user(),
-            'orders' => Order::all(),
+            'orders' => Auth::user()->admin
+                ? Order::all()
+                : Order::where('user_id', Auth::id())->get(),
             'orderProducts' => OrderProductController::index(),
             'orderServices' => OrderServiceController::index(),
-        ]);
-        else return Inertia::render('Orders', [
-            'user' => Auth::user(),
-            'orders' => function() {
-                $orders = [];
-                foreach (Order::where('user_id', Auth::id())->get() as $order) {
-                    $order->expanded = [$order->status == 'В работе' ? $order->id : null];
-                    $orders[] = $order;
-                }
-                return $orders;
-            },
-            'orderProducts' => OrderProductController::index(),
-            'orderServices' => OrderServiceController::index(),
+            'users' => Auth::user()->admin ? User::all() : null,
         ]);
     }
 
@@ -80,9 +71,15 @@ class OrderController extends Controller
         $order->save();
     }
 
-    public function patch(Request $request, Int $id): Void {
+    public function update(Request $request, Int $id): Void {
         $order = Order::find($id);
         $order->status = $request->status;
+        $order->save();
+    }
+
+    public function cancel(Int $id): Void {
+        $order = Order::find($id);
+        $order->status = 'Отменён';
         $order->save();
     }
 }

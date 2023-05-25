@@ -78,6 +78,7 @@ Route::prefix('orders')->controller(OrderController::class)->middleware('auth')-
     Route::get('/', 'index');
     Route::post('/', 'store')->name('order.make');
     Route::patch('/{id}', 'update')->middleware('admin');
+    Route::patch('/cancel/{id}', 'cancel');
     Route::delete('/{id}', 'delete');
 
 });

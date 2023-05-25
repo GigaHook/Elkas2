@@ -3,7 +3,7 @@
 	<MainLayout :user="user">
 
 		<v-expansion-panels 
-			v-for="order in reversedOrders" 
+			v-for="order in processedOrders" 
 			:key="order.id"
 			v-model="order.expanded"
 			class="mb-3"
@@ -16,61 +16,91 @@
 			>
 				<v-expansion-panel-title color="#f9f7f7" class="order-title">
 					Заказ №
-					<span class="ms-1 order-number text-weight-thin">
+					<span class="ms-2 order-number">
 						{{ formatOrderId(order.id) }}
 					</span>
 
-					<template> 
-						<v-chip v-if="order.status == 'В работе'" color="info" variant="elevated" class="text-h6 ms-2">
-							{{ order.status }}
-						</v-chip>
-						<v-chip v-else-if="order.status == 'Завершён'" color="success" variant="elevated" class="text-h6 ms-2">
-							{{ order.status }}
-						</v-chip>
-						<v-chip v-else variant="elevated" class="text-h6 ms-2">
-							{{ order.status }}
-						</v-chip>
-					</template>
-						
+					<v-chip v-if="order.status == 'В работе'" color="info" variant="elevated" class="text-h6 ms-2">
+						{{ order.status }}
+					</v-chip>
+
+					<v-chip v-else-if="order.status == 'Завершён'" color="success" variant="elevated" class="text-h6 ms-2">
+						{{ order.status }}
+					</v-chip>
+
+					<v-chip v-else variant="elevated" class="text-h6 ms-2">
+						{{ order.status }}
+					</v-chip>
+
 				</v-expansion-panel-title>
-				
+
 				<v-expansion-panel-text
 					style="background-color: #f9f7f7"
 					class="rounded"
 				>
-					<div class="text-h6">
-						Изменить статус заказа
-						<v-select
-					  	chips
-					  	prefix="Статус"
-							density="compact"
-					  	:items="['В работе', 'Завершён', 'Отменён']"
-					  	variant="underlined"
-							class="w-25"
-							v-model="order.status"
-						/>
+					<v-row class="mb-n4">
 
-					</div>
-					<v-row class="text-h6">
-						<v-col cols="4">
+						<v-col cols="12" class="d-flex align-center pb-0 mt-1 mb-n2" style="white-space: nowrap;">
+							<h2>Информация о заказе</h2>
+							<v-divider class="mt-1 ms-2"/>
+						</v-col>
+
+						<template v-if="user.admin">
+
+							<v-col cols="3" class="pt-0 pb-3">
+								<v-select
+					  			prefix="Статус"
+					  			:items="['В работе', 'Завершён', 'Отменён']"
+									v-model="order.status"
+									@update:model-value="updateStatus(order)"
+            	    variant="underlined"
+            	    density="comfortable"
+									hide-details
+								/>
+							</v-col>
+
+							<v-col cols="3" class="mt-2 pt-0 pb-3">
+								Заказчик: <br> {{ getOrderUser(order.user_id).name }}
+							</v-col>
+
+							<v-col cols="3" class="mt-2 pt-0 pb-3">
+								Телефон: <br> {{ getOrderUser(order.user_id).number }} 
+							</v-col>
+
+							<v-col cols="3" class="mt-2 pt-0 pb-3">
+								Почта: <br> {{ getOrderUser(order.user_id).email }} 
+							</v-col>
+							
+							<v-divider class="mx-3"/>
+
+						</template>
+
+						<v-col cols="3">
 							Всего предметов: {{ countOrderProducts(order.id) + countOrderServices(order.id) }}<br>
 							Итого: ${{ order.price }}
 						</v-col>
-						<v-col cols="4">
+
+						<v-col cols="3">
 							Товаров: {{ countOrderProducts(order.id) }}<br>
 							На стоимость: ${{ totalOrderProducts(order.id) }}
 						</v-col>
-						<v-col cols="4">
+
+						<v-col cols="3">
 							Услуг: {{ countOrderServices(order.id) }}<br>
 							На стоимость: ${{ totalOrderServices(order.id) }}
 						</v-col>
+
+						<v-col cols="3">
+							Создан: {{ getOrderUser(order.user_id).created_at.slice(0, 10) }}<br>
+							Изменён: {{ getOrderUser(order.user_id).updated_at.slice(0, 10) }}
+						</v-col>
+
 					</v-row>
 
 					<div class="d-flex align-center">
 						<h2>Товары</h2>
 						<v-divider class="mt-1 ms-2"/>
 					</div>
-
 					
 					<OrderItem 
 						v-for="orderProduct in getOrderProducts(order.id)"
@@ -78,6 +108,12 @@
 						:item="orderProduct"
 						type="product"
 					/>
+
+					<v-row v-if="getOrderProducts(order.id).length < 1">
+						<v-col cols="12" class="text-center text-blue-grey-lighten-1">
+							Нет товаров
+						</v-col>
+					</v-row>
 
 					<div class="d-flex align-center">
 						<h2>Услуги</h2>
@@ -90,6 +126,20 @@
 						:item="orderService"
 						type="service"
 					/>
+
+					<v-row v-if="getOrderServices(order.id).length < 1">
+						<v-col cols="12" class="text-center text-blue-grey-lighten-1">
+							Нет услуг
+						</v-col>
+					</v-row>
+
+					<Button
+						v-if="!user.admin && order.status == 'В работе'"
+						@click="cancel(order.id)"
+						class="mt-1"
+					>
+						Отменить
+					</Button>
 
 				</v-expansion-panel-text>
 			</v-expansion-panel>
@@ -107,9 +157,12 @@ export default {
 	},
 
 	computed: {
-		reversedOrders() {
-			return this.orders.reverse()
-		}
+		processedOrders() {
+			let orders = this.orders.reverse()
+			if (!this.user.admin) orders.forEach(order => order.expanded = [order.status == 'В работе' ? order.id : null])
+			return orders
+		},
+
 	},
 
 	methods: {
@@ -121,7 +174,12 @@ export default {
 			return this.orderServices.filter(elem => elem.order_id == id)
 		},
 
-		formatOrderId(id) {
+		getOrderUser(id) {
+			if (this.user.admin) return this.users.find(user => user.id == id)
+			else return this.user
+		},
+
+		formatOrderId(id) { //bruh
 			let result = ''
 			switch (id.toString().length) {
 				case 1:
@@ -180,14 +238,14 @@ export default {
 			return total
 		},
 
-		panelClick(event, expanded) {
-			if (event.target.tagName != 'button') {
-				expanded = []
-				console.log(event.target.tagName);
-				console.log(expanded);
-			}
+		updateStatus(order) {
+			router.patch(`/orders/${order.id}`, { status: order.status }, { preserveState: true, preserveScroll: true })
 		},
 
+		cancel(id) {
+			router.patch(`/orders/cancel/${id}`, {}, { preserveState: true, preserveScroll: true })
+		}
+		
 
 	},
 
@@ -199,29 +257,35 @@ export default {
 </script>
 
 <script setup>
-import MainLayout from '@/Layouts/MainLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import MainLayout from '@/Layouts/MainLayout.vue'
+import { Head, router } from '@inertiajs/vue3'
 import OrderItem from '../Components/OrderItem.vue'
+import Button from '../Components/Button.vue'
 
 defineProps({
   user: Object,
 	orders: Object,
 	orderProducts: Array,
 	orderServices: Array,
+	users: {
+		type: Array,
+		default: [],
+	}
 })
 </script>
 
 <style scoped>
-@import url('https://fonts.cdnfonts.com/css/bender');
+@import url('https://fonts.cdnfonts.com/css/major-mono-display-2');
 .order-number{
-	font-family: 'Bender', sans-serif;
-	font-size:24px;
-	font-weight:100;
+	font-family: 'Major Mono Display', sans-serif;
+	font-weight: 900;
+	font-size:20px;
 	background: #ffffff;
 	border-radius: 3px;
 	z-index: 1;
-	padding: 0 3px 0 2px;
+	padding: 0 2px 2px 2px;
 	outline: 1px solid #bbb;
+	font-variant-numeric: tabular-nums;
 }
 .order-title{
 	font-size: 24px
