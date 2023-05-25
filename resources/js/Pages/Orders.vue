@@ -20,7 +20,7 @@
 						{{ formatOrderId(order.id) }}
 					</span>
 
-					<template v-if="!user.admin"> 
+					<template> 
 						<v-chip v-if="order.status == 'В работе'" color="info" variant="elevated" class="text-h6 ms-2">
 							{{ order.status }}
 						</v-chip>
@@ -31,17 +31,6 @@
 							{{ order.status }}
 						</v-chip>
 					</template>
-
-					<v-select
-						v-else
-						:ref="'select' + order.id"
-					  chips
-					  label="Статус"
-						density="compact"
-					  :items="['В работе', 'Завершён', 'Отменён']"
-					  variant="solo"
-						@click.stop.prevent="event => selectClick(event)"
-					/>
 						
 				</v-expansion-panel-title>
 				
@@ -49,6 +38,19 @@
 					style="background-color: #f9f7f7"
 					class="rounded"
 				>
+					<div class="text-h6">
+						Изменить статус заказа
+						<v-select
+					  	chips
+					  	prefix="Статус"
+							density="compact"
+					  	:items="['В работе', 'Завершён', 'Отменён']"
+					  	variant="underlined"
+							class="w-25"
+							v-model="order.status"
+						/>
+
+					</div>
 					<v-row class="text-h6">
 						<v-col cols="4">
 							Всего предметов: {{ countOrderProducts(order.id) + countOrderServices(order.id) }}<br>
@@ -178,10 +180,14 @@ export default {
 			return total
 		},
 
-		selectClick(event) {
-			event.stopPropagation()
-			
+		panelClick(event, expanded) {
+			if (event.target.tagName != 'button') {
+				expanded = []
+				console.log(event.target.tagName);
+				console.log(expanded);
+			}
 		},
+
 
 	},
 
