@@ -37,7 +37,11 @@ Route::controller(ProductController::class)->prefix('products')->group(function(
 Route::controller(ServiceController::class)->prefix('services')->group(function() {
     Route::get('/', 'index');
     Route::get('/{id}', 'show');
-    Route::post('/', 'store')->middleware('admin');
+    Route::middleware('admin')->group(function() {
+        Route::post('/', 'store');
+        Route::patch('/{id}', 'update');
+        Route::delete('/{id}', 'delete');
+    });
 });
 
 Route::get('/contacts', function() {

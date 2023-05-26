@@ -19,10 +19,8 @@
 				</v-col>
 	
 				<v-col cols="2" class="text-h6 text-end">
-					<div class="text-h5">
-						<v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ item.price * item.count }}
-					</div>
-					<v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ item.price }} х {{ item.count }}
+					<div class="text-h5"><Rub/>{{ item.price * item.count }}</div>
+					<Rub/>{{ item.price }} х {{ item.count }}
 				</v-col>
 	
 			</v-row>
@@ -51,6 +49,7 @@ export default {
 
 <script setup>
 import { router } from '@inertiajs/vue3';
+import Rub from '../Components/Rub.vue'
 </script>
 
 <style scoped>

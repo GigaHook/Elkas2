@@ -10,17 +10,16 @@
       <div class="text-h5 mb-2">{{ service.name }}</div>
       <v-row>
         <v-col cols="6">
-          <v-sheet class="w-100 text-center" style="aspect-ratio: 1 / 1;">
-            img
-          </v-sheet>
+          <img :src="'../storage/' + service.image" class="w-100" style="aspect-ratio: 1 / 1;">
         </v-col>
-
         <v-col cols="6">
           <div class="text-h6">Описание</div>
           {{ service.description }}
         </v-col>
       </v-row>
-      <div class="my-2 text-h6">Цена: ${{ service.price }}</div>
+      <div class="my-2 text-h6">
+        Цена: <Rub/>{{ service.price }}
+      </div>
       <div class="d-flex">
         <Button @click="cartAddItem">Добавить в корзину</Button>
         <v-fade-transition>
@@ -61,6 +60,7 @@ export default {
 import { Head, router } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import Button from '../Components/Button.vue'
+import Rub from '../Components/Rub.vue'
 
 defineProps({
   user: Object,

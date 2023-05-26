@@ -89,15 +89,13 @@
               />
               <Button type="submit" class="mb-3">Войти</Button> <br>
               Нет аккаунта? <br>
-              <v-btn 
-                variant="text" 
+              <InferiorBtn
                 @click="formVariant = !formVariant" 
                 append-icon="mdi-arrow-right" 
-                v-ripple="{ class: `text-info` }"
                 class="mt-1"
               >
                 Зарегистрироваться
-              </v-btn>
+              </InferiorBtn>
             </v-form>
           </v-card>
           <!--register-->
@@ -177,15 +175,13 @@
               />
               <Button type="submit" class="mb-3">Зарегистрироваться</Button> <br>
               Есть аккаунт? <br>
-              <v-btn 
-                variant="text" 
+              <InferiorBtn
                 @click="formVariant = !formVariant" 
                 append-icon="mdi-arrow-right" 
-                v-ripple="{ class: `text-info` }"
                 class="mt-1"
               >
                 Войти
-              </v-btn>
+              </InferiorBtn>
             </v-form>
           </v-card>
         </v-scroll-x-transition>
@@ -376,6 +372,7 @@ export default {
 import { Link, Head, router } from '@inertiajs/vue3'
 import Button from '../Components/Button.vue'
 import NavItem from '../Components/NavItem.vue'
+import InferiorBtn from '../Components/InferiorBtn.vue'
 
 </script>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Error;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\CartProduct;
@@ -17,7 +18,13 @@ class CartProductController extends Controller
         $cartProducts = CartProduct::where('user_id', Auth::id())->get();
         foreach ($cartProducts as $cartProduct) {
             $product = Product::find($cartProduct->product_id);
-            $product->count = $cartProduct->count;
+            try {
+                $product->count = $cartProduct->count;
+            } catch (Error) {
+                //НЕ РАБОТАЮТ СВЯЗИ В БД ХЗ ПОЧЕМУ ПОЭТОМУ ДЕЛАЮ РУКАМИ
+                CartProduct::find($cartProduct->product_id)->delete();
+                continue;
+            }
             $products[] = $product;
         }
         return $products;

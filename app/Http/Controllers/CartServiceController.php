@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CartService;
 use App\Models\Service;
+
+use Error;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +19,13 @@ class CartServiceController extends Controller
         $cartservices = CartService::where('user_id', Auth::id())->get();
         foreach ($cartservices as $cartservice) {
             $service = Service::find($cartservice->service_id);
-            $service->count = $cartservice->count;
+            try {
+                $service->count = $cartservice->count;
+            } catch (Error) {
+                //НЕ РАБОТАЮТ СВЯЗИ В БД ХЗ ПОЧЕМУ ПОЭТОМУ ДЕЛАЮ РУКАМИ
+                CartService::find($cartservice->service_id)->delete();
+                continue;
+            }
             $services[] = $service;
         }
         return $services;

@@ -77,17 +77,17 @@
 
 						<v-col cols="3">
 							Всего предметов: {{ countOrderProducts(order.id) + countOrderServices(order.id) }}<br>
-							Итого: <v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ order.price }}
+							Итого: <Rub/>{{ order.price }}
 						</v-col>
 
 						<v-col cols="3">
 							Товаров: {{ countOrderProducts(order.id) }}<br>
-							На стоимость: <v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ totalOrderProducts(order.id) }}
+							На стоимость: <Rub/>{{ totalOrderProducts(order.id) }}
 						</v-col>
 
 						<v-col cols="3">
 							Услуг: {{ countOrderServices(order.id) }}<br>
-							На стоимость: <v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ totalOrderServices(order.id) }}
+							На стоимость: <Rub/>{{ totalOrderServices(order.id) }}
 						</v-col>
 
 						<v-col cols="3">
@@ -260,6 +260,7 @@ import MainLayout from '@/Layouts/MainLayout.vue'
 import { Head, router } from '@inertiajs/vue3'
 import OrderItem from '../Components/OrderItem.vue'
 import Button from '../Components/Button.vue'
+import Rub from '../Components/Rub.vue'
 
 defineProps({
   user: Object,

@@ -12,7 +12,7 @@
             <v-divider class="mx-4 my-1" vertical/>
             <div>
               <div>Всего: <b>{{ totalItems() }}</b></div>
-              <div>На общую стоимость: <b>{{ totalPrice() }}</b></div>
+              <div>На общую стоимость: <b><Rub/>{{ totalPrice() }}</b></div>
             </div>
           </div>
         </v-toolbar-title>
@@ -31,6 +31,7 @@
 
 <script setup>
 import { router } from '@inertiajs/vue3'
+import Rub from '../Components/Rub.vue'
 </script>
 
 <script>

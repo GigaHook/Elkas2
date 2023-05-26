@@ -6,7 +6,6 @@
 		@cartEndUpdate="cartUpdate = null"
 	>
 		<v-row>
-
 			<v-col cols="12">
 				<v-card v-if="user?.admin" class="pa-3" color="#f9f7f7" elevation="3">
 					<div class="text-h5 mb-3">
@@ -75,7 +74,6 @@
 					</v-row>
 				</v-card>
 			</v-col>
-
 			<template v-for="product in $page.props.products" :key="product.id">
 				<v-col xl="3" md="4" sm="6" v-if="product.available == true">
 					<v-hover v-slot="{ isHovering, props }">
@@ -88,7 +86,7 @@
 						>
 							<div class="text-h6">{{ product.name }}</div>
 							<img :src="'storage/' + product.image" class="my-1 w-100" style="aspect-ratio: 1 / 1;">
-							<div class="text-h6"><v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ product.price }}</div>
+							<div class="text-h6"><Rub/>{{ product.price }}</div>
 							<v-divider class="mb-3"/>
 							<Button 
                 @click.stop="cartAddItem(product)"
@@ -133,6 +131,13 @@ export default {
 				preserveScroll: true,
 				preserveState: true,
 				forceFormData: true,
+			}, {
+				onFinish: () => {
+					this.name = null,
+					this.image = null,
+					this.price = null,
+					this.description = null
+				}
 			})
 		},
 	},
@@ -143,6 +148,7 @@ export default {
 import { Head, router } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import Button from '../Components/Button.vue'
+import Rub from '../Components/Rub.vue'
 
 defineProps({
   user: Object,
