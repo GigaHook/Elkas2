@@ -31,11 +31,13 @@ Route::get('/', function () {
 Route::controller(ProductController::class)->prefix('products')->group(function() {
     Route::get('/', 'index');
     Route::get('/{id}', 'show');
+    Route::post('/', 'store')->middleware('admin');
 });
 
 Route::controller(ServiceController::class)->prefix('services')->group(function() {
     Route::get('/', 'index');
     Route::get('/{id}', 'show');
+    Route::post('/', 'store')->middleware('admin');
 });
 
 Route::get('/contacts', function() {

@@ -77,22 +77,21 @@
 
 						<v-col cols="3">
 							Всего предметов: {{ countOrderProducts(order.id) + countOrderServices(order.id) }}<br>
-							Итого: ${{ order.price }}
+							Итого: <v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ order.price }}
 						</v-col>
 
 						<v-col cols="3">
 							Товаров: {{ countOrderProducts(order.id) }}<br>
-							На стоимость: ${{ totalOrderProducts(order.id) }}
+							На стоимость: <v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ totalOrderProducts(order.id) }}
 						</v-col>
 
 						<v-col cols="3">
 							Услуг: {{ countOrderServices(order.id) }}<br>
-							На стоимость: ${{ totalOrderServices(order.id) }}
+							На стоимость: <v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ totalOrderServices(order.id) }}
 						</v-col>
 
 						<v-col cols="3">
-							Создан: {{ getOrderUser(order.user_id).created_at.slice(0, 10) }}<br>
-							Изменён: {{ getOrderUser(order.user_id).updated_at.slice(0, 10) }}
+							Дата оформления: <br> {{ getOrderUser(order.user_id).created_at.slice(0, 10) }}
 						</v-col>
 
 					</v-row>

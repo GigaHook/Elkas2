@@ -19,8 +19,10 @@
 				</v-col>
 	
 				<v-col cols="2" class="text-h6 text-end">
-					<span class="text-h5">${{ item.price * item.count }}</span><br>
-					${{ item.price }} х {{ item.count }}
+					<div class="text-h5">
+						<v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ item.price * item.count }}
+					</div>
+					<v-icon icon="mdi-currency-rub" size="xs" class="mb-1"/>{{ item.price }} х {{ item.count }}
 				</v-col>
 	
 			</v-row>

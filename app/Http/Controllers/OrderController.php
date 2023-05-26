@@ -19,8 +19,8 @@ use Inertia\Response as InertiaResponse;
 class OrderController extends Controller
 {
     /**
-     * Для пользователя: Представление всех его ордеров с товарами и услугами всех ордеров
-     * Для админа: ВСе ордера, их заказы и услуги
+     * Для пользователя: Представление всех его ордеров с их товарами и услугами
+     * Для админа: Все ордера, их заказы и услуги
      * @return InertiaResponse
      */
     public function index(): InertiaResponse {

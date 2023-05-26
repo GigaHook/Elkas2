@@ -9,7 +9,7 @@
 
 				<v-col cols="3">
 					<div class="text-h6">
-						Адрес
+						<v-icon icon="mdi-map-marker-radius"/>Адрес
 					</div>
 					г. Канск <br>
 					ул. Пролетарская <br>
@@ -18,14 +18,14 @@
 
 				<v-col cols="3">
 					<div class="text-h6">
-						Почта
+						<v-icon icon="mdi-email"/>Почта
 					</div>
 					elkastest@gmail.com
 				</v-col>
 
 				<v-col cols="3">
 					<div class="text-h6">
-						Телефон
+						<v-icon icon="mdi-phone"/>Телефон
 					</div>
 					+7 (39161) 3-23-81 <br>
 					+7 (39161) 6-35-00
@@ -33,7 +33,7 @@
 
 				<v-col cols="3">
 					<div class="text-h6">
-						График работы
+						<v-icon icon="mdi-timetable"/>График работы
 					</div>
 					Понедельник - Пятница <br>
 					09:00 - 17:00

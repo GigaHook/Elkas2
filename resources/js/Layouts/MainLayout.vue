@@ -71,6 +71,7 @@
                 bg-color="#DBE2EF"
                 variant="solo"
                 density="comfortable"
+                prepend-inner-icon="mdi-email"
                 required
               />
               <v-text-field
@@ -83,6 +84,7 @@
                 bg-color="#DBE2EF"
                 variant="solo"
                 density="comfortable"
+                prepend-inner-icon="mdi-lock"
                 required
               />
               <Button type="submit" class="mb-3">Войти</Button> <br>
@@ -114,6 +116,7 @@
                 color="#3F72AF"
                 variant="solo"
                 density="comfortable"
+                prepend-inner-icon="mdi-account"
                 required
               />
               <v-text-field
@@ -126,6 +129,7 @@
                 color="#3F72AF"
                 variant="solo"
                 density="comfortable"
+                prepend-inner-icon="mdi-email"
                 required
               />
               <v-text-field
@@ -140,6 +144,7 @@
                 color="#3F72AF"
                 variant="solo"
                 density="comfortable"
+                prepend-inner-icon="mdi-cellphone"
                 required
               />
               <v-text-field
@@ -153,6 +158,7 @@
                 color="#3F72AF"
                 variant="solo"
                 density="comfortable"
+                prepend-inner-icon="mdi-lock"
                 required
               />
               <v-text-field
@@ -166,6 +172,7 @@
                 color="#3F72AF"
                 variant="solo"
                 density="comfortable"
+                prepend-inner-icon="mdi-lock-reset"
                 required
               />
               <Button type="submit" class="mb-3">Зарегистрироваться</Button> <br>

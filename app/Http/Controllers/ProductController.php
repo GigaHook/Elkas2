@@ -22,4 +22,17 @@ class ProductController extends Controller
             'product' => Product::find($id)
         ]);
     }
+
+    public function store(Request $request): Void {
+        $image = $request->file('image')[0];
+        $imageName = time().'.'.$image->getClientOriginalExtension();
+        $path = $image->storeAs('public/assets/images', $imageName);
+        Product::create([
+            'name' => $request->name,
+            'image' => str_replace('public/', '', $path),
+            'price' => $request->price,
+            'description' => $request->description,
+            'available' => true,
+        ]);
+    }
 }
