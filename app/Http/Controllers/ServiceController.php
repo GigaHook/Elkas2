@@ -37,12 +37,17 @@ class ServiceController extends Controller
     }
 
     public function update(Request $request, Int $id): Void {
-        Service::find($id)->update($request->validate([
-            'name' => 'required|string|unique',
-            'image' => 'required|string',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-        ]));
+        if ($request->file('image')) {
+            $image = $request->file('image')[0];
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $path = $image->storeAs('public/assets/images', $imageName);
+        }
+        Service::find($id)->update([
+            'name' => $request->name,
+            'image' => isset($path) ? str_replace('public/', '', $path) : Service::find($id)->image,
+            'description' => $request->description,
+            'price' => $request->price,
+        ]);
     }
 
     public function delete(Int $id): Void {

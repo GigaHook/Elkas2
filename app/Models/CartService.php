@@ -14,4 +14,5 @@ class CartService extends Model
         'count',
     ];
     public $timestamps = false;
+    
 }

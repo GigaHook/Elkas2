@@ -9,70 +9,82 @@
 			<v-col cols="12">
 				<v-card v-if="user?.admin" class="pa-3" color="#f9f7f7" elevation="3">
 					<div class="text-h5 mb-3">
-						Добавить услугу
+						<span v-if="!serviceToChange">Добавить услугу</span>
+						<span v-else>Изменить услугу</span>
 					</div>
-					<v-row>
-						<v-col cols="6">
-							<v-text-field
-								v-model="name"
-								type="text"
-								label="Название"
-								color="#3F72AF"
-								bg-color="#DBE2EF"
-								variant="solo"
-								density="comfortable"
-								prepend-inner-icon="mdi-alphabetical-variant"
-								hide-details
-								required
-								class="mb-3"
-							/>
-							<v-file-input
-								v-model="image"
-								label="Изображение"
-								color="#3F72AF"
-								bg-color="#DBE2EF"
-								variant="solo"
-								density="comfortable"
-								accept="image/*"
-								prepend-inner-icon="mdi-image-area"
-								prepend-icon
-								hide-details
-								required
-								clearable
-								class="mb-3"
-							/>
-							<v-text-field
-								v-model="price"
-								type="tel"
-								label="Цена"
-								v-mask="['########']"
-								color="#3F72AF"
-								bg-color="#DBE2EF"
-								variant="solo"
-								density="comfortable"
-								prepend-inner-icon="mdi-currency-rub"
-								hide-details
-								required
-								class="mb-3"
-							/>
-							<Button v-if="!change" @click="createService">Добавить услугу</Button>
-							<Button v-else @click="updateService">Сохранить изменения</Button>
-						</v-col>
-						<v-col cols="6">
-							<v-textarea
-								v-model="description"
-								type="text"
-								label="Описание"
-								color="#3F72AF"
-								bg-color="#DBE2EF"
-								variant="solo"
-								density="comfortable"
-								hide-details
-								required
-								class="pb-6 h-100"
-							/>
-						</v-col>
-					</v-row>
+					<v-form v-model="form" @submit.prevent>
+						<v-row>
+							<v-col cols="6">
+								<v-text-field
+									v-model="name"
+									:rules="[rules.required]"
+									validate-on="input"
+									type="text"
+									label="Название"
+									color="#3F72AF"
+									bg-color="#DBE2EF"
+									variant="solo"
+									density="comfortable"
+									prepend-inner-icon="mdi-alphabetical-variant"
+									hide-details
+									required
+									class="mb-3"
+								/>
+								<v-file-input
+									v-model="image"
+									:label="serviceToChange ? 'Изменить изображение' : 'Изображение'"
+									color="#3F72AF"
+									bg-color="#DBE2EF"
+									variant="solo"
+									density="comfortable"
+									accept="image/*"
+									prepend-inner-icon="mdi-image-area"
+									prepend-icon
+									hide-details
+									:required="!!serviceToChange"
+									clearable
+									class="mb-3"
+								/>
+								<v-text-field
+									v-model="price"
+									:rules="[rules.required]"
+									validate-on="input"
+									type="tel"
+									label="Цена"
+									v-mask="['########']"
+									color="#3F72AF"
+									bg-color="#DBE2EF"
+									variant="solo"
+									density="comfortable"
+									prepend-inner-icon="mdi-currency-rub"
+									hide-details
+									required
+									class="mb-3"
+								/>
+								<Button v-if="!serviceToChange" @click="createService" type="submit">Добавить услугу</Button>
+								<template v-else>
+									<Button @click="updateService" type="submit">Сохранить изменения</Button>
+									<InferiorBtn @click="cancel" class="ms-3" type="submit">Отмена</InferiorBtn>
+								</template>
+							</v-col>
+							<v-col cols="6">
+								<v-textarea
+									v-model="description"
+									:rules="[rules.required]"
+									validate-on="input"
+									type="text"
+									label="Описание"
+									color="#3F72AF"
+									bg-color="#DBE2EF"
+									variant="solo"
+									density="comfortable"
+									hide-details
+									required
+									class="pb-6 h-100"
+								/>
+							</v-col>
+						</v-row>
+					</v-form>
 				</v-card>
 			</v-col>
 			<template v-for="service in $page.props.services" :key="service.id">
@@ -116,13 +128,16 @@
 export default {
 	data() {
 		return {
+			form: false,
 			cartUpdate: null,
 			name: null,
 			image: null,
 			price: null,
 			description: null,
-			change:false,
-			changeService: null,
+			serviceToChange: null,
+			rules: {
+				required: value => !!value || "Это обязательное поле"
+			},
 		}
 	},
 
@@ -131,8 +146,21 @@ export default {
   	  router.post('/cart/service', { id: service.id, }, { preserveState: true, preserveScroll: true })
   	  this.cartUpdate = { action: 'add', type: 'service', item: service } 
   	},
-		
+
+		clearForm() {
+			this.name = null,
+			this.image = null,
+			this.price = null,
+			this.description = null
+		},
+
+		cancel() {
+			this.serviceToChange = null
+			this.clearForm()
+		},
+
 		createService() {
+			if (!(!!this.name && !!this.image && !!this.price && !!this.description)) return
 			router.post('/services', {
 				name: this.name,
 				image: this.image,
@@ -143,39 +171,31 @@ export default {
 				preserveState: true,
 				forceFormData: true,
 			}, {
-				onFinish: () => {
-					this.name = null,
-					this.image = null,
-					this.price = null,
-					this.description = null
-				}
+				onFinish: this.clearForm()
 			})
 		},
 
 		editService(service) {
-			this.changeService = service
+			this.serviceToChange = service
 			this.name = service.name
-			this.image = service.image
 			this.price = service.price
 			this.description = service.description
 		},
 
 		updateService() {
-			router.patch(`/services/${this.changeService.id}`, {
+			if (!(!!this.name && !!this.price && !!this.description)) return
+			router.post(`/services/${this.serviceToChange.id}`, {
+				_method: 'patch',
 				name: this.name,
 				image: this.image,
 				price: this.price,
 				description: this.description
 			}, {
 				preserveState: true,
-				preserveScroll: true
+				preserveScroll: true,
+				forceFormData: true,
 			}, {
-				onFinish: () => {
-					this.name = null,
-					this.image = null,
-					this.price = null,
-					this.description = null
-				}
+				onFinish: this.cancel()
 			})
 		},
 		
@@ -187,7 +207,7 @@ export default {
 </script>
 
 <script setup>
-import { Head, router } from '@inertiajs/vue3'
+import { Head, router} from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import Button from '../Components/Button.vue'
 import InferiorBtn from '../Components/InferiorBtn.vue'

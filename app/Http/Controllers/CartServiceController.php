@@ -16,17 +16,18 @@ class CartServiceController extends Controller
 {
     public static function index(): Array {
         $services = [];
-        $cartservices = CartService::where('user_id', Auth::id())->get();
-        foreach ($cartservices as $cartservice) {
-            $service = Service::find($cartservice->service_id);
+        $cartServices = CartService::where('user_id', Auth::id())->get();
+        foreach ($cartServices as $cartService) {
+            //$service->count = $cartService->count;
+            //НЕ РАБОТАЮТ СВЯЗИ В БД ХЗ ПОЧЕМУ ПОЭТОМУ ДЕЛАЮ РУКАМИ
             try {
-                $service->count = $cartservice->count;
+                $service = Service::find($cartService->service_id);
+                $service->count = $cartService->count;
+                $services[] = $service;
             } catch (Error) {
-                //НЕ РАБОТАЮТ СВЯЗИ В БД ХЗ ПОЧЕМУ ПОЭТОМУ ДЕЛАЮ РУКАМИ
-                CartService::find($cartservice->service_id)->delete();
+                //CartService::find($cartService->service_id)->delete();
                 continue;
             }
-            $services[] = $service;
         }
         return $services;
     }

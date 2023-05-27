@@ -17,15 +17,15 @@ class CartProductController extends Controller
         $products = [];
         $cartProducts = CartProduct::where('user_id', Auth::id())->get();
         foreach ($cartProducts as $cartProduct) {
-            $product = Product::find($cartProduct->product_id);
+            //$product->count = $cartProduct->count;
+            //НЕ РАБОТАЮТ СВЯЗИ В БД ХЗ ПОЧЕМУ ПОЭТОМУ ДЕЛАЮ РУКАМИ
             try {
+                $product = Product::find($cartProduct->product_id);
                 $product->count = $cartProduct->count;
+                $products[] = $product;
             } catch (Error) {
-                //НЕ РАБОТАЮТ СВЯЗИ В БД ХЗ ПОЧЕМУ ПОЭТОМУ ДЕЛАЮ РУКАМИ
-                CartProduct::find($cartProduct->product_id)->delete();
                 continue;
             }
-            $products[] = $product;
         }
         return $products;
     }
