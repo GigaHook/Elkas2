@@ -10,7 +10,7 @@
 			<v-row>
 
 				<v-col cols="2">
-					<v-sheet class="w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
+					<img :src="'../storage/' + item.image" class="w-100" style="aspect-ratio: 1 / 1;">
 				</v-col>
 	
 				<v-col cols="8">

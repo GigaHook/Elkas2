@@ -18,15 +18,12 @@ class CartServiceController extends Controller
         $services = [];
         $cartServices = CartService::where('user_id', Auth::id())->get();
         foreach ($cartServices as $cartService) {
-            //$service->count = $cartService->count;
-            //НЕ РАБОТАЮТ СВЯЗИ В БД ХЗ ПОЧЕМУ ПОЭТОМУ ДЕЛАЮ РУКАМИ
             try {
                 $service = Service::find($cartService->service_id);
                 $service->count = $cartService->count;
                 $services[] = $service;
             } catch (Error) {
-                //CartService::find($cartService->service_id)->delete();
-                continue;
+                continue; //вижу цель не вижу препятствий
             }
         }
         return $services;

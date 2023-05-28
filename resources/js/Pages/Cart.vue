@@ -3,7 +3,9 @@
 	<MainLayout
 		:user="user"
 		:cartUpdate="cartUpdate"
+		:cartData="cartData"
 		@cartEndUpdate="cartUpdate = null"
+		@cartClear="cartClear"
 	>
 		<v-slide-y-transition group leave-absolute>
 
@@ -86,12 +88,38 @@ export default {
 		}
 	},
 
+	computed: {
+		cartData() {
+			return {
+				totalItems: this.totalItems(this.products) + this.totalItems(this.services),
+				totalPrice: this.totalPrice(this.products) + this.totalPrice(this.services)
+			}
+		}
+	},
+
 	mounted() {
 		this.products = this.$page.props.cart.products
 		this.services = this.$page.props.cart.services
+		this.$root.cartBadge = false
 	},
 
 	methods: {	
+		totalPrice(items) {
+      let total = 0
+      items.forEach(item => {
+        total += item.price * item.count
+      })
+      return total
+    },
+
+    totalItems(items) {
+      let total = 0
+      items.forEach(item => {
+        total += item.count
+      })
+      return total
+    },
+
 		get(type) { //GET PRODUCTS/SERVICES
 			return type == 'product' ? this.products : this.services
 		},
@@ -125,6 +153,11 @@ export default {
 				type: type,
 				item: item,
 			} 
+		},
+
+		cartClear() {
+			this.cartClearItems('product')
+			this.cartClearItems('service')
 		},
 
 	}

@@ -14,25 +14,33 @@
             <NavItem route="/about">О нас</NavItem>
             <NavItem route="/orders" :disabled="!user">Заказы</NavItem>
 
-            <Link v-if="!!user" href="/cart" class="ms-auto">
-              <v-btn
-                class="rounded-0 cart-btn " 
-                :class="{ 'active': $page.url === '/cart' }" 
-                icon="mdi-cart-outline" 
-                style="height:100%; width:48px" 
-                size="x-large"
-              />
-            </Link>
+            <v-btn
+              v-if="!!user"
+              class="rounded-0 cart-btn ms-auto" 
+              :class="{ 'active': $page.url === '/cart' }"
+              style="height:100%; max-width:48px" 
+              @click="router.get('/cart')"
+              size="small"
+            >
+              <v-badge
+                v-if="$root.cartBadge"
+                color="red"
+                dot
+              >
+                <v-icon icon="mdi-cart-outline" size="32"/>
+              </v-badge>
+              <v-icon v-else icon="mdi-cart-outline" size="32"/>
+            </v-btn>
+            
+            <v-btn 
+              v-else
+              class="rounded-0 cart-btn ms-auto" 
+              icon="mdi-cart-outline" 
+              style="height:100%; width:48px" 
+              size="x-large" 
+              disabled
+            />
           
-            <span v-else class="ms-auto">
-              <v-btn 
-                class="rounded-0 cart-btn" 
-                icon="mdi-cart-outline" 
-                style="height:100%; width:48px" 
-                size="x-large" 
-                disabled
-              />
-            </span>
           </v-col>
         </v-row>
       </v-app-bar>
@@ -187,11 +195,48 @@
         </v-scroll-x-transition>
         <!--cart data-->
         <v-card v-if="$page.url === '/cart'" class="pa-3 mt-6" color="#f9f7f7" elevation="3">
-          Всего товаров в корзине: TODO
-          <Button @click="makeOrder">Оформить заказ</Button>
+          <div class="text-h5 mb-1">
+            Корзина
+          </div>
+          Всего предметов в корзине: {{ cartData.totalItems }} <br>
+          На общую стоимость: {{ cartData.totalPrice }}
+          <div class="d-flex align-end justify-between">
+            <Button @click="makeOrder" class="mt-2">Оформить заказ</Button>
+            <InferiorBtn @click="$emit('cartClear')">Очистить</InferiorBtn>
+          </div>
         </v-card>
       </v-col>
     </v-row>
+    <!--footer-->
+    <v-card class="mt-4" color="#DBE2EF">
+      <v-container>
+        <v-row>
+			  	<v-col cols="3">
+			  		<v-icon icon="mdi-map"/>
+			  		г. Канск <br>
+			  		<v-icon icon="mdi-map-marker-radius"/>
+            ул. Пролетарская <br>
+            <v-icon icon="mdi-map-marker"/>
+			  		д. 34, офис 65
+			  	</v-col>
+			  	<v-col cols="3">
+			  		<v-icon icon="mdi-email-outline"/> elkastest@gmail.com
+			  	</v-col>
+			  	<v-col cols="3">
+			  		<v-icon icon="mdi-phone"/>
+			  		+7 (39161) 3-23-81 <br>
+            <v-icon icon="mdi-phone"/>
+			  		+7 (39161) 6-35-00
+			  	</v-col>
+			  	<v-col cols="3">
+            <v-icon icon="mdi-timetable"/>
+            Понедельник - Пятница <br>
+            <v-icon icon="mdi-clock-outline"/>
+            09:00 - 17:00
+			  	</v-col>
+			  </v-row>
+      </v-container>
+    </v-card>
 
     <v-snackbar 
       v-model="feedback" 
@@ -220,7 +265,7 @@ export default {
     cartData: {
       type: Object,
       default: null,
-    }
+    },
   },
 
   watch: {
@@ -251,7 +296,15 @@ export default {
       }
       this.notify(text, icon)
       this.$emit('cartEndUpdate')
-    }
+    },
+
+    '$page.props.cart': {
+      handler() {
+        if (this.$page.url !== '/cart') this.$root.cartBadge = true
+      },
+      deep: true
+    },
+
   },
 
   data() {
@@ -277,13 +330,7 @@ export default {
       feedbackIcon: '',
       feedbackText: '',
       feedbackColor: '',
-      feedbackTimeout: 0,
-    }
-  },
-
-  computed: {
-    cartTotal() {
-      return ''
+      feedbackTimeOut: 0,
     }
   },
 
@@ -369,7 +416,7 @@ export default {
 </script>
 
 <script setup>
-import { Link, Head, router } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
 import Button from '../Components/Button.vue'
 import NavItem from '../Components/NavItem.vue'
 import InferiorBtn from '../Components/InferiorBtn.vue'

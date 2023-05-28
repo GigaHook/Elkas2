@@ -11,8 +11,8 @@
             <div class="text-h5 my-auto">{{ title }}</div>
             <v-divider class="mx-4 my-1" vertical/>
             <div>
-              <div>Всего: <b>{{ totalItems() }}</b></div>
-              <div>На общую стоимость: <b><Rub/>{{ totalPrice() }}</b></div>
+              <div>Всего: {{ totalItems() }}</div>
+              <div>На общую стоимость: {{ totalPrice() }}<Rub/></div>
             </div>
           </div>
         </v-toolbar-title>

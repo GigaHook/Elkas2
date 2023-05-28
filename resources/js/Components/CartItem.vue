@@ -9,10 +9,10 @@
 				variant="plain"
 			>
 				<div class="text-h6">{{ item.name }}</div>
-				<v-sheet class="my-1 w-100 img" style="aspect-ratio: 1 / 1;">img</v-sheet>
+				<img :src="'../storage/' + item.image" class="w-100" style="aspect-ratio: 1 / 1;">
 				<div class="my-3 text-h6">
-					<span v-if="priceVariant"><Rub/>{{ item.price }}</span>
-					<span v-else><Rub/>{{ item.count * item.price }}, по <Rub/>{{ item.price }} за шт</span>
+					<span v-if="priceVariant">{{ item.price }}<Rub/></span>
+					<span v-else>{{ item.count * item.price }}<Rub/>, по {{ item.price }}<Rub/> за шт</span>
 				</div>
 				<v-divider class="mb-3"/>
 				<v-toolbar density="compact" color="#f9f7f7" rounded>

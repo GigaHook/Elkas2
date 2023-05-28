@@ -12,13 +12,11 @@
 						<span v-if="!serviceToChange">Добавить услугу</span>
 						<span v-else>Изменить услугу</span>
 					</div>
-					<v-form v-model="form" @submit.prevent>
+					<v-form v-model="form" @submit.prevent="!!serviceToChange ? updateService() : createService()">
 						<v-row>
 							<v-col cols="6">
 								<v-text-field
 									v-model="name"
-									:rules="[rules.required]"
-									validate-on="input"
 									type="text"
 									label="Название"
 									color="#3F72AF"
@@ -32,7 +30,7 @@
 								/>
 								<v-file-input
 									v-model="image"
-									:label="serviceToChange ? 'Изменить изображение' : 'Изображение'"
+									:label="!!serviceToChange ? 'Изменить изображение' : 'Изображение'"
 									color="#3F72AF"
 									bg-color="#DBE2EF"
 									variant="solo"
@@ -47,8 +45,6 @@
 								/>
 								<v-text-field
 									v-model="price"
-									:rules="[rules.required]"
-									validate-on="input"
 									type="tel"
 									label="Цена"
 									v-mask="['########']"
@@ -61,17 +57,15 @@
 									required
 									class="mb-3"
 								/>
-								<Button v-if="!serviceToChange" @click="createService" type="submit">Добавить услугу</Button>
+								<Button v-if="!serviceToChange" type="submit">Добавить услугу</Button>
 								<template v-else>
-									<Button @click="updateService" type="submit">Сохранить изменения</Button>
-									<InferiorBtn @click="cancel" class="ms-3" type="submit">Отмена</InferiorBtn>
+									<Button type="submit">Сохранить изменения</Button>
+									<InferiorBtn @click="cancel" class="ms-3">Отмена</InferiorBtn>
 								</template>
 							</v-col>
 							<v-col cols="6">
 								<v-textarea
 									v-model="description"
-									:rules="[rules.required]"
-									validate-on="input"
 									type="text"
 									label="Описание"
 									color="#3F72AF"
@@ -99,7 +93,7 @@
 						>
 							<div class="text-h6">{{ service.name }}</div>
 							<img :src="'storage/' + service.image" class="my-1 w-100" style="aspect-ratio: 1 / 1;">
-							<div class="text-h6"><Rub/>{{ service.price }}</div>
+							<div class="text-h6">{{ service.price }}<Rub/></div>
 							<v-divider class="mb-3"/>
 							<Button 
                 @click.stop="cartAddItem(service)"
@@ -128,16 +122,13 @@
 export default {
 	data() {
 		return {
-			form: false,
+			form: true,
 			cartUpdate: null,
 			name: null,
 			image: null,
 			price: null,
 			description: null,
 			serviceToChange: null,
-			rules: {
-				required: value => !!value || "Это обязательное поле"
-			},
 		}
 	},
 
@@ -148,9 +139,9 @@ export default {
   	},
 
 		clearForm() {
-			this.name = null,
-			this.image = null,
-			this.price = null,
+			this.name = null
+			this.image = null
+			this.price = null
 			this.description = null
 		},
 
@@ -160,7 +151,7 @@ export default {
 		},
 
 		createService() {
-			if (!(!!this.name && !!this.image && !!this.price && !!this.description)) return
+			if (!(this.name && this.image && this.price && this.description)) return
 			router.post('/services', {
 				name: this.name,
 				image: this.image,
@@ -183,7 +174,7 @@ export default {
 		},
 
 		updateService() {
-			if (!(!!this.name && !!this.price && !!this.description)) return
+			if (!(this.name && this.price && this.description)) return
 			router.post(`/services/${this.serviceToChange.id}`, {
 				_method: 'patch',
 				name: this.name,
@@ -201,18 +192,18 @@ export default {
 		
 		deleteService(service) {
 			router.delete(`/services/${service.id}`, { preserveState: true, preserveScroll: true })
+			if (service.id == this.serviceToChange?.id) this.cancel()
 		}
 	},
 }
 </script>
 
 <script setup>
-import { Head, router} from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import Button from '../Components/Button.vue'
 import InferiorBtn from '../Components/InferiorBtn.vue'
 import Rub from '../Components/Rub.vue'
-
 
 defineProps({
   user: Object,

@@ -35,4 +35,23 @@ class ProductController extends Controller
             'available' => true,
         ]);
     }
+    
+    public function update(Request $request, Int $id): Void {
+        if ($request->file('image')) {
+            $image = $request->file('image')[0];
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $path = $image->storeAs('public/assets/images', $imageName);
+        }
+        Product::find($id)->update([
+            'name' => $request->name,
+            'image' => isset($path) ? str_replace('public/', '', $path) : Product::find($id)->image,
+            'description' => $request->description,
+            'price' => $request->price,
+        ]);
+    }
+
+    public function delete(Int $id): Void {
+        Product::find($id)->delete();
+    }
+    
 }

@@ -17,14 +17,14 @@ class CatalogueSeeder extends Seeder
         for ($i=0; $i < 10; $i++) { 
             DB::table('products')->insert([
                 'name' => Str::random(10),
-                'image' => 'images/products/'.Str::random(10).'png',
+                'image' => 'assets/default.png',
                 'price' => 100,
                 'description' => Str::random(100),
                 'available' => 1,
             ]);
             DB::table('services')->insert([
                 'name' => Str::random(10),
-                'image' => 'images/services/'.Str::random(10).'png',
+                'image' => 'assets/default.png',
                 'price' => 100,
                 'description' => Str::random(100),
                 'available' => 1,
