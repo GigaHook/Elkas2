@@ -300,7 +300,7 @@ export default {
 
     '$page.props.cart': {
       handler() {
-        if (this.$page.url !== '/cart') this.$root.cartBadge = true
+        if (this.$page.url !== '/cart' &&  cartData.totalItems() > 0) this.$root.cartBadge = true
       },
       deep: true
     },
