@@ -6,8 +6,8 @@
 		@cartEndUpdate="cartUpdate = null"
 	>
 		<v-row>
-			<v-col cols="12">
-				<v-card v-if="user?.admin" class="pa-3" color="#f9f7f7" elevation="3">
+			<v-col v-if="user?.admin" cols="12">
+				<v-card class="pa-3" color="#f9f7f7" elevation="3">
 					<div class="text-h5 mb-3">
 						<span v-if="!serviceToChange">Добавить услугу</span>
 						<span v-else>Изменить услугу</span>
