@@ -19,8 +19,8 @@
 				</v-col>
 	
 				<v-col cols="2" class="text-h6 text-end">
-					<div class="text-h5"><Rub/>{{ item.price * item.count }}</div>
-					<Rub/>{{ item.price }} х {{ item.count }}
+					<div class="text-h5">{{ item.price * item.count }}<Rub/></div>
+					{{ item.price }}<Rub/> х {{ item.count }}
 				</v-col>
 	
 			</v-row>

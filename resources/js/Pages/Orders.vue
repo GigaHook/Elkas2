@@ -77,17 +77,17 @@
 
 						<v-col cols="3">
 							Всего предметов: {{ countOrderProducts(order.id) + countOrderServices(order.id) }}<br>
-							Итого: <Rub/>{{ order.price }}
+							Итого: {{ order.price }}<Rub/>
 						</v-col>
 
 						<v-col cols="3">
 							Товаров: {{ countOrderProducts(order.id) }}<br>
-							На стоимость: <Rub/>{{ totalOrderProducts(order.id) }}
+							На стоимость: {{ totalOrderProducts(order.id) }}<Rub/>
 						</v-col>
 
 						<v-col cols="3">
 							Услуг: {{ countOrderServices(order.id) }}<br>
-							На стоимость: <Rub/>{{ totalOrderServices(order.id) }}
+							На стоимость: {{ totalOrderServices(order.id) }}<Rub/>
 						</v-col>
 
 						<v-col cols="3">

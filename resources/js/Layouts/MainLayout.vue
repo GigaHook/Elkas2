@@ -300,7 +300,7 @@ export default {
 
     '$page.props.cart': {
       handler() {
-        if (this.$page.url !== '/cart' &&  cartData.totalItems() > 0) this.$root.cartBadge = true
+        if (this.$page.url !== '/cart' &&  this.cartData?.totalItems > 0) this.$root.cartBadge = true
       },
       deep: true
     },
@@ -406,6 +406,9 @@ export default {
       }, {
         preserveScroll: true,
         preserveState: true,
+        onFinish: setTimeout(function() {
+          this.$emit('cartClear')
+        }.bind(this), 1000)
       })
     }
 
