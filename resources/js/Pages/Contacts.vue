@@ -20,7 +20,7 @@
 					<div class="text-h6">
 						<v-icon icon="mdi-email"/>Почта
 					</div>
-					elkastest@gmail.com
+					elkas.kansk@mail.ru
 				</v-col>
 
 				<v-col cols="3">

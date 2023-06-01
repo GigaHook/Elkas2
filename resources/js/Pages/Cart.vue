@@ -8,7 +8,6 @@
 		@cartClear="cartClear"
 	>
 		<v-slide-y-transition group leave-absolute>
-
 			<CartBar
 				:entries="products" 
 				:title="'Товары'" 
@@ -16,7 +15,6 @@
 				@changePriceVariant="productsPriceVariant = !productsPriceVariant"
 				@clear="cartClearItems"
 			/>
-		
 			<v-row>
 				<v-slide-y-transition group leave-absolute v-if="products.length > 0">
 					<CartItem
@@ -31,7 +29,7 @@
 					/>
 				</v-slide-y-transition>
 			</v-row>
-			
+
 			<v-divider class="my-5"/>
 
 			<CartBar 

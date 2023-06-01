@@ -220,7 +220,8 @@
 			  		д. 34, офис 65
 			  	</v-col>
 			  	<v-col cols="3">
-			  		<v-icon icon="mdi-email-outline"/> elkastest@gmail.com
+			  		<v-icon icon="mdi-email-outline"/>
+             elkas.kansk@mail.ru
 			  	</v-col>
 			  	<v-col cols="3">
 			  		<v-icon icon="mdi-phone"/>
