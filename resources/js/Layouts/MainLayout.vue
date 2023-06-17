@@ -32,14 +32,26 @@
               <v-icon v-else icon="mdi-cart-outline" size="32"/>
             </v-btn>
             
-            <v-btn 
+            <v-btn
+              v-else
+              class="rounded-0 cart-btn ms-auto" 
+              :class="{ 'active': $page.url === '/cart' }"
+              style="height:100%; max-width:48px" 
+              @click="router.get('/cart')"
+              size="small"
+              disabled
+            >
+              <v-icon icon="mdi-cart-outline" size="32"/>
+            </v-btn>
+
+            <!--<v-btn 
               v-else
               class="rounded-0 cart-btn ms-auto" 
               icon="mdi-cart-outline" 
               style="height:100%; width:48px" 
               size="x-large" 
               disabled
-            />
+            />-->
           
           </v-col>
         </v-row>
@@ -201,7 +213,7 @@
           Всего предметов в корзине: {{ cartData.totalItems }} <br>
           На общую стоимость: {{ cartData.totalPrice }}
           <div class="d-flex align-end justify-between">
-            <Button @click="makeOrder" class="mt-2">Оформить заказ</Button>
+            <Button @click="makeOrder" class="mt-2" :disabled="cartData.totalItems == 0">Оформить заказ</Button>
             <InferiorBtn @click="$emit('cartClear')">Очистить</InferiorBtn>
           </div>
         </v-card>
@@ -221,7 +233,7 @@
 			  	</v-col>
 			  	<v-col cols="3">
 			  		<v-icon icon="mdi-email-outline"/>
-             elkas.kansk@mail.ru
+            elkas.kansk@mail.ru
 			  	</v-col>
 			  	<v-col cols="3">
 			  		<v-icon icon="mdi-phone"/>
@@ -239,22 +251,6 @@
       </v-container>
     </v-card>
 
-    <v-snackbar 
-      v-model="feedback" 
-      :timeout="feedbackTimeOut"
-      color="#f9f7f7"
-    >
-      <div style="color:black" class="d-flex align-center">
-        <v-icon :color="feedbackColor" :icon="feedbackIcon" size="30" class="me-2"/>
-        {{ feedbackText }}
-      </div>
-      <template v-slot:actions>
-        <v-btn @click="feedback = false" variant="plain" color="black">
-          <v-icon icon="mdi-close"/>
-        </v-btn>
-      </template>
-    </v-snackbar>
-
   </v-app>
 </template>
 
@@ -262,7 +258,6 @@
 export default {
   props: {
     user: Object,
-    cartUpdate: Object,
     cartData: {
       type: Object,
       default: null,
@@ -270,38 +265,9 @@ export default {
   },
 
   watch: {
-    cartUpdate(data) {
-      if (!data) return
-      let text
-      let icon
-      switch (data.action) {
-        case 'add': 
-          text = data.type == 'product'
-          ? `Товар ${data.item.name} добавлен в корзину`
-          : `Услуга ${data.item.name} добавлена в корзину`
-          icon = 'mdi-cart-arrow-down'
-          break
-        case 'delete':
-          text = data.type == 'product'
-          ? `Товар ${data.item.name} удалён из корзины`
-          : `Услуга ${data.item.name} удалена из корзины`
-          icon = 'mdi-cart-remove'
-          break
-        case 'clear':
-          text = data.type == 'product'
-          ? 'Товары убраны из корзины'
-          : 'Услуги убраны из корзины'
-          icon = 'mdi-cart-remove'
-          break
-        default: break
-      }
-      this.notify(text, icon)
-      this.$emit('cartEndUpdate')
-    },
-
     '$page.props.cart': {
       handler() {
-        if (this.$page.url !== '/cart' &&  this.cartData?.totalItems > 0) this.$root.cartBadge = true
+        if (this.$page.url !== '/cart') this.$root.cartBadge = true
       },
       deep: true
     },
@@ -326,33 +292,20 @@ export default {
       formVariant: true,
       isLoginValid: true,
       isRegisterValid: true,
-      //notification
-      feedback: false,
-      feedbackIcon: '',
-      feedbackText: '',
-      feedbackColor: '',
-      feedbackTimeOut: 0,
     }
   },
 
   methods: {
     clearForms() {
-      this.loginEmail = ''
-      this.loginPassword = ''
-      this.registerEmail = ''
-      this.registerPassword = ''
-      this.registerName = ''
-      this.registerNumber = ''
-      this.repeat = ''
-    },
-
-    notify(text, icon='mdi-information-outline', color='info') {
-      this.feedbackTimeout = 0
-      this.feedbackText = text
-      this.feedbackIcon = icon
-      this.feedbackColor = color
-      this.feedbackTimeout = 4000
-      this.feedback = true
+      setTimeout(function() {
+        this.loginEmail = ''
+        this.loginPassword = ''
+        this.registerEmail = ''
+        this.registerPassword = ''
+        this.registerName = ''
+        this.registerNumber = ''
+        this.repeat = ''
+      }.bind(this), 1000)
     },
 
     loginSubmit() {
@@ -364,11 +317,7 @@ export default {
         }, {
           preserveState: true,
           preserveScroll: true,
-          onSuccess: () => {
-            this.notify('Вы вошли в аккаунт', 'mdi-account-check-outline', 'success')
-            this.clearForms()
-          },
-          onError: () => this.notify('Неверный логин или пароль', 'mdi-account-remove-outline', 'red-darken-2')
+          onSuccess: this.clearForms()
         })
       }
     },
@@ -383,11 +332,7 @@ export default {
         }, {
           preserveScroll: true,
           preserveState: true,
-          onSuccess: () => {
-            this.notify('Вы успешно зарагистрировались', 'mdi-account-plus-outline', 'success')
-            this.clearForms()
-          },
-          onError: () => this.notify('Ошибка. Проверьте ваши данные', 'mdi-account-remove-outline', 'red-darken-2')
+          onSuccess: this.clearForms(),
         })
       }
     },
@@ -396,7 +341,6 @@ export default {
       router.post(route('logout'), {
         preserveState: true,
         preserveScroll: true,
-        onFinish: this.notify('Вы вышли из аккаунта')
       })
     },
 
@@ -420,7 +364,7 @@ export default {
 </script>
 
 <script setup>
-import { Link, router } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3'
 import Button from '../Components/Button.vue'
 import NavItem from '../Components/NavItem.vue'
 import InferiorBtn from '../Components/InferiorBtn.vue'

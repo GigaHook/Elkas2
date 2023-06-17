@@ -21,7 +21,7 @@
         Цена: <Rub/>{{ product.price }}
       </div>
       <div class="d-flex">
-        <Button @click="cartAddItem">Добавить в корзину</Button>
+        <Button @click="cartAddItem" :disabled="!user">Добавить в корзину</Button>
         <v-fade-transition>
           <v-card 
             v-if="$page.props.cart?.products.find(elem => elem.id == product.id)" 

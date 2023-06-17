@@ -92,7 +92,7 @@
 							variant="plain"
 						>
 							<div class="text-h6">{{ product.name }}</div>
-							<img :src="'storage/' + product.image" class="my-1 w-100" style="aspect-ratio: 1 / 1;">
+							<v-img :src="'storage/' + product.image" class="my-1 w-100" style="aspect-ratio: 1 / 1;"/>
 							<div class="text-h6">{{ product.price }}<Rub/></div>
 							<v-divider class="mb-3"/>
 							<Button 

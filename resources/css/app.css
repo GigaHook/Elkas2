@@ -5,4 +5,8 @@
 a{
   text-decoration: none;
 }
+:root {
+  --toastify-toast-width: 400px;
+  --toastify-color-warning: #ec9b00;
+}
 

@@ -2,9 +2,7 @@
 	<Head title="Корзина"/>
 	<MainLayout
 		:user="user"
-		:cartUpdate="cartUpdate"
 		:cartData="cartData"
-		@cartEndUpdate="cartUpdate = null"
 		@cartClear="cartClear"
 	>
 		<v-slide-y-transition group leave-absolute>
@@ -63,7 +61,6 @@
 <script setup>
 import { Head, router } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
-import Button from '../Components/Button.vue'
 import CartBar from '../Components/CartBar.vue'
 import CartItem from '../Components/CartItem.vue'
 
@@ -82,7 +79,6 @@ export default {
 			services: [],
 			productsPriceVariant: true,
 			servicesPriceVariant: true,
-			cartUpdate: null,
 		}
 	},
 
@@ -135,22 +131,12 @@ export default {
 
 		cartDeleteItem(id, type) { //DELETE
 			router.delete(`/cart/${type}/${id}`, { preserveState: true, preserveScroll: true, })
-			this.sendCartUpdate('delete', type, this.get(type).find(elem => elem.id == id))
 			this.get(type).splice(this.get(type).findIndex(elem => elem.id == id), 1)
 		},
 
 		cartClearItems(type) { //CLEAR
 			router.delete(`cart/${type}`)
-			this.sendCartUpdate('clear', type)
 			this.get(type).splice(0, this.get(type).length)
-		},
-
-		sendCartUpdate(action, type, item=null) {
-			this.cartUpdate = {
-				action: action,
-				type: type,
-				item: item,
-			} 
 		},
 
 		cartClear() {
